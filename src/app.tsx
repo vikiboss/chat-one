@@ -27,7 +27,7 @@ export function App() {
 					console.log(res);
 				}}
 			>
-				send
+				{"Ciallo～(∠·ω< )⌒☆"}
 			</button>
 		</div>
 	);

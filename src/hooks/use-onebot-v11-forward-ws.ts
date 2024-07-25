@@ -15,9 +15,6 @@ export function useOnebotV11ForwardWS(
 	url: string,
 	options: UseOneBotV11ForwardWSOptions = {},
 ) {
-	const actions = useCreation(() => new Set());
-	const bus = useEventBus(Symbol("api_ret"));
-
 	const {
 		onConnected = () => {},
 		onDisconnected = () => {},
@@ -26,6 +23,9 @@ export function useOnebotV11ForwardWS(
 		onRequest = () => {},
 		onMetaEvent = () => {},
 	} = options;
+
+	const bus = useEventBus(Symbol("api_ret"));
+	const actions = useCreation(() => new Set());
 
 	const apiWs = useWebsocket(url, {
 		onOpen: onConnected,
@@ -80,11 +80,7 @@ export function useOnebotV11ForwardWS(
 			apiWs.send(JSON.stringify({ action, params, echo: actionId }));
 			return await retPromise;
 		},
-		send: async (data: Record<string, unknown>) => {
-			const { retPromise, actionId } = genRetPromise();
-			apiWs.send(JSON.stringify({ ...data, echo: actionId }));
-			return await retPromise;
-		},
+		ws: apiWs,
 	}));
 
 	return api;
