@@ -2,6 +2,7 @@
   "name": "react-ts-vite-unocss-template",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@8.15.8",
   "description": "react-ts-vite-unocss template",
   "scripts": {
     "dev": "vite",
@@ -9,15 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "@shined/react-use": "^1.3.0",
+    "@shined/reactive": "^0.1.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@types/react": "^18.2.43",
-    "@types/react-dom": "^18.2.17",
-    "@vitejs/plugin-react-swc": "^3.5.0",
-    "typescript": "^5.2.2",
-    "unocss": "^0.58.3",
-    "vite": "^5.0.8"
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react-swc": "^3.7.0",
+    "typescript": "^5.5.4",
+    "unocss": "^0.60.4",
+    "vite": "^5.3.4"
   }
 }
