@@ -1,21 +1,16 @@
-import React from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRoot } from "react-dom/client";
 
-import { App } from './app.tsx'
+import { App } from "./app.tsx";
 
-import 'virtual:uno.css'
-import './index.css'
+import "virtual:uno.css";
+import "./index.css";
 
-const mainDiv = document.getElementById('main')
+const mainDiv = document.getElementById("main");
 
 if (mainDiv) {
-  const root = createRoot(mainDiv)
+	const root = createRoot(mainDiv);
 
-  root.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  )
+	root.render(<App />);
 } else {
-  console.error('mainDiv is null')
+	console.error("mainDiv is null");
 }
