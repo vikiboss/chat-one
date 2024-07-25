@@ -18,11 +18,13 @@ export function App() {
 			<pre>Chat One</pre>
 			<button
 				type="button"
-				onClick={() => {
-					api.action("send_private_msg", {
+				onClick={async () => {
+					const res = await api.action("send_private_msg", {
 						user_id: 1141284758,
 						message: "Ciallo～(∠·ω< )⌒☆",
 					});
+
+					console.log(res);
 				}}
 			>
 				send

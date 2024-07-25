@@ -1,5 +1,6 @@
-import { useCreation } from "@shined/react-use";
+import { useCreation, useEventBus } from "@shined/react-use";
 import { useWebsocket } from "./use-websocket";
+import { uuid } from "../utils/uuid";
 
 export interface UseOneBotV11ForwardWSOptions {
 	onMessage?: (message: OneBot.GroupMessage | OneBot.PrivateMessage) => void;
@@ -14,6 +15,9 @@ export function useOnebotV11ForwardWS(
 	url: string,
 	options: UseOneBotV11ForwardWSOptions = {},
 ) {
+	const actions = useCreation(() => new Set());
+	const bus = useEventBus(Symbol("api_ret"));
+
 	const {
 		onConnected = () => {},
 		onDisconnected = () => {},
@@ -23,18 +27,15 @@ export function useOnebotV11ForwardWS(
 		onMetaEvent = () => {},
 	} = options;
 
-	const [base, sp] = url.split("?");
-
-	const ApiUrl = `${base}/api${sp ? `?${sp}` : ""}`;
-	const eventUrl = `${base}/event${sp ? `?${sp}` : ""}`;
-
-	const apiWS = useWebsocket(ApiUrl);
-
-	useWebsocket(eventUrl, {
+	const apiWs = useWebsocket(url, {
 		onOpen: onConnected,
 		onClose: onDisconnected,
 		onMessage(message) {
 			const msg = JSON.parse(message.data);
+
+			if (msg.echo) {
+				bus.emit(`action:${msg.echo}`, msg);
+			}
 
 			switch (msg.post_type) {
 				case "message":
@@ -55,12 +56,34 @@ export function useOnebotV11ForwardWS(
 		},
 	});
 
+	function genRetPromise() {
+		const actionId = uuid();
+		actions.add(actionId);
+
+		return {
+			retPromise: new Promise((resolve) => {
+				bus.on((event, data) => {
+					if (event === `action:${actionId}`) {
+						actions.delete(actionId);
+						if (actions.size === 0) bus.cleanup();
+						resolve(data);
+					}
+				});
+			}),
+			actionId,
+		};
+	}
+
 	const api = useCreation(() => ({
-		action: (action: string, params: Record<string, unknown>) => {
-			apiWS.send(JSON.stringify({ action, params }));
+		action: async (action: string, params: Record<string, unknown>) => {
+			const { retPromise, actionId } = genRetPromise();
+			apiWs.send(JSON.stringify({ action, params, echo: actionId }));
+			return await retPromise;
 		},
-		send: (data: Record<string, unknown>) => {
-			apiWS.send(JSON.stringify(data));
+		send: async (data: Record<string, unknown>) => {
+			const { retPromise, actionId } = genRetPromise();
+			apiWs.send(JSON.stringify({ ...data, echo: actionId }));
+			return await retPromise;
 		},
 	}));
 
