@@ -56,13 +56,13 @@ export function useOnebotV11ForwardWS(
 		},
 	});
 
-	function genRetPromise() {
+	function genRetPromise<Data>() {
 		const actionId = uuid();
 		actions.add(actionId);
 
 		return {
-			retPromise: new Promise((resolve) => {
-				bus.on((event, data) => {
+			retPromise: new Promise<Data>((resolve) => {
+				bus.on((event, data: Data) => {
 					if (event === `action:${actionId}`) {
 						actions.delete(actionId);
 						if (actions.size === 0) bus.cleanup();
@@ -75,8 +75,8 @@ export function useOnebotV11ForwardWS(
 	}
 
 	const api = useCreation(() => ({
-		action: async (action: string, params: Record<string, unknown>) => {
-			const { retPromise, actionId } = genRetPromise();
+		action: async <Data>(action: string, params: Record<string, unknown>) => {
+			const { retPromise, actionId } = genRetPromise<Data>();
 			apiWs.send(JSON.stringify({ action, params, echo: actionId }));
 			return await retPromise;
 		},
@@ -117,7 +117,7 @@ export namespace OneBot {
 		sender: Sender;
 	}
 
-	export interface GroupMessage {
+	export interface GroupMessage extends Message {
 		group_id: number;
 		anonymous: AnonymousInfo | null;
 		sender: Sender & {
