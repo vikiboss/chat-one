@@ -8,6 +8,12 @@ import type { OneBot } from './hooks/use-onebot-v11-forward-ws'
 export function App() {
   const [state, mutate] = useReactive(
     {
+      info: undefined as
+        | undefined
+        | {
+            user_id: number
+            nickname: string
+          },
       url: __WS_URL__ || '',
       active: undefined as
         | undefined
@@ -39,7 +45,7 @@ export function App() {
       mutate.history.unshift({
         message_id: Date.now(),
         group_id: state.active.id,
-        sender: { user_id: 0, nickname: 'Me' },
+        sender: { user_id: state.info?.user_id ?? 0, nickname: state.info?.nickname ?? 'Me' },
         time: Date.now() / 1000,
         message: [{ type: 'text', data: { text: input.value } }],
         anonymous: null,
@@ -62,7 +68,7 @@ export function App() {
       mutate.history.unshift({
         message_id: Date.now(),
         user_id: state.active.id,
-        sender: { user_id: 0, nickname: 'Me' },
+        sender: { user_id: state.info?.user_id ?? 0, nickname: state.info?.nickname ?? 'Me' },
         time: Date.now() / 1000,
         message: [{ type: 'text', data: { text: input.value } }],
         anonymous: null,
@@ -83,6 +89,9 @@ export function App() {
   const api = useOnebotV11ForwardWS(state.url, {
     async onConnected() {
       console.log('WS connection is ready!')
+
+      const iRes = await api.action<{ data: any }>('get_login_info')
+      mutate.info = iRes.data
 
       const gRes = await api.action<{ data: any[] }>('get_group_list')
       mutate.groups = gRes.data
@@ -126,6 +135,20 @@ export function App() {
           >
             connect
           </button>
+          {state.info ? (
+            <div className="flex gap-1 items-center">
+              <img
+                className="h-5 w-5 rounded"
+                src={`https://avatar.viki.moe?qq=${state.info.user_id}&size=100`}
+                alt="avatar"
+              />
+              <div className="text-xs">
+                {state.info.nickname ?? '-'} ({state.info.user_id ?? '-'})
+              </div>
+            </div>
+          ) : (
+            <div>Not Logged</div>
+          )}
         </div>
 
         <div className="flex gap-2">
@@ -207,11 +230,16 @@ export function App() {
         {histories.map((e) => {
           return (
             <div key={e.message_id} className="border border-solid rounded border-amber/20 my-4 px-2 py-1 mx-2">
-              <div className="flex items-center gap-2">
-                <div className="flex text-xs px-1 py-0.5 rounded bg-blue-2/20">{e.sender.nickname ?? 'Unknown'} </div>
+              <div className="flex items-center gap-1">
+                <img
+                  className="h-5 w-5 rounded"
+                  src={`https://avatar.viki.moe?qq=${e.sender.user_id}&size=100`}
+                  alt="avatar"
+                />
+                <div className="flex text-xs px-1 py-0.5 rounded bg-blue-2/12">{e.sender.nickname ?? 'Unknown'} </div>
                 <div className="text-xs text-gray/60">{new Date(e.time * 1000).toLocaleString('zh-CN')}</div>
               </div>
-              <pre className="text-wrap">
+              <pre className="text-wrap mt-1 mb-0">
                 {e.message.map((e: any, idx) => {
                   switch (e.type) {
                     case 'text':
