@@ -80,7 +80,7 @@ export function useOnebotV11ForwardWS(url: string, options: UseOneBotV11ForwardW
   const api = useCreation(() => ({
     action: <Data>(action: string, params: Record<string, unknown> = {}) => {
       const { retPromise, actionId } = genRetPromise<Data>()
-      apiWs.send(JSON.stringify({ action, params, echo: actionId }))
+      apiWs.current?.send(JSON.stringify({ action, params, echo: actionId }))
       return retPromise
     },
     ws: apiWs,

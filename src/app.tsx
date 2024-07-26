@@ -6,6 +6,23 @@ import { useOnebotV11ForwardWS } from './hooks/use-onebot-v11-forward-ws'
 import type { OneBot } from './hooks/use-onebot-v11-forward-ws'
 
 export function App() {
+  const [state, mutate] = useReactive(
+    {
+      url: __WS_URL__ || '',
+      active: undefined as
+        | undefined
+        | {
+            type: 'group' | 'private'
+            id: number
+            name: string
+          },
+      groups: [] as any[],
+      friends: [] as any[],
+      history: [] as (OneBot.GroupMessage | OneBot.PrivateMessage)[],
+    },
+    { create },
+  )
+
   const wsInput = useControlledComponent('')
   const input = useControlledComponent('')
 
@@ -63,34 +80,17 @@ export function App() {
 
   useKeyStroke('Enter', send.run, { target: '#msg-input' })
 
-  const [state, mutate] = useReactive(
-    {
-      active: undefined as
-        | undefined
-        | {
-            type: 'group' | 'private'
-            id: number
-            name: string
-          },
-      groups: [] as any[],
-      friends: [] as any[],
-      history: [] as (OneBot.GroupMessage | OneBot.PrivateMessage)[],
-    },
-    { create },
-  )
-
-  const api = useOnebotV11ForwardWS(__WS_URL__ ?? wsInput.value, {
+  const api = useOnebotV11ForwardWS(state.url, {
     async onConnected() {
       console.log('WS connection is ready!')
 
       const gRes = await api.action<{ data: any[] }>('get_group_list')
-      mutate.groups.push(...gRes.data)
+      mutate.groups = gRes.data
 
       const fRes = await api.action<{ data: any[] }>('get_friend_list')
-      mutate.friends.push(...fRes.data)
+      mutate.friends = fRes.data
     },
     onMessage(message) {
-      console.log(message)
       mutate.history.unshift(message)
     },
     onDisconnected() {
@@ -118,6 +118,14 @@ export function App() {
         <div className="flex gap-2 my-2">
           <div>Chat One, input WS:</div>
           <input disabled={send.loading} {...wsInput.props} type="text" />
+          <button
+            type="button"
+            onClick={() => {
+              mutate.url = wsInput.value
+            }}
+          >
+            connect
+          </button>
         </div>
 
         <div className="flex gap-2">
