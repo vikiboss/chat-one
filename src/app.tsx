@@ -4,6 +4,7 @@ import { useAsyncFn, useControlledComponent, useKeyStroke, useReactive } from '@
 import { useOnebotV11ForwardWS } from './hooks/use-onebot-v11-forward-ws'
 
 import type { OneBot } from './hooks/use-onebot-v11-forward-ws'
+import { useInputComposition } from './hooks/use-input-composition'
 
 export function App() {
   const [state, mutate] = useReactive(
@@ -31,8 +32,10 @@ export function App() {
 
   const wsInput = useControlledComponent('')
   const input = useControlledComponent('')
+  const isComposing = useInputComposition('#msg-input')
 
   const send = useAsyncFn(async () => {
+    if (isComposing) return
     if (input.value.trim() === '') return
     if (state.active === undefined) return
 
