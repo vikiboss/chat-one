@@ -203,8 +203,8 @@ export function App() {
                       return <img key={idx + e} className="h-24 rounded" src={e.data.url} alt="chat-image" />
                     case 'at':
                       return (
-                        <span key={idx + e} className="mx-1 rounded bg-blue/20 text-blue-5">
-                          @{e.data.text}
+                        <span key={idx + e} className="mx-1 bg-blue/20 text-blue-5 px-2 py-1 rounded">
+                          @{e.data.qq}
                         </span>
                       )
                     case 'face':
@@ -213,38 +213,12 @@ export function App() {
                           [face:{e.data.id}:{e.data.text}]
                         </span>
                       )
-                    case 'reply':
-                      return `[Reply] ${e.data.message_id}`
-                    case 'record':
-                      return `[Record] ${e.data.file}`
-                    case 'video':
-                      return `[Video] ${e.data.url}`
-                    case 'audio':
-                      return `[Audio] ${e.data.url}`
-                    case 'file':
-                      return `[File] ${e.data.url}`
-                    case 'share':
-                      return `[Share] ${e.data.url}`
-                    case 'location':
-                      return `[Location] ${e.data.lat}, ${e.data.lon}`
-                    case 'music':
-                      return `[Music] ${e.data.url}`
-                    case 'contact':
-                      return `[Contact] ${e.data.user_id}`
-                    case 'dice':
-                      return `[Dice] ${e.data.type}`
-                    case 'rps':
-                      return `[RPS] ${e.data.type}`
-                    case 'xml':
-                      return `[XML] ${e.data.data}`
-                    case 'json':
-                      return `[JSON] ${e.data.data}`
-                    case 'app':
-                      return `[App] ${e.data.data}`
-                    case 'node':
-                      return `[Node] ${e.data.data}`
-                    case 'forward':
-                      return `[Forward] ${e.data.message_id}`
+                    default:
+                      return (
+                        <span>
+                          {e.type}: {JSON.stringify(e.data)}
+                        </span>
+                      )
                   }
                 })}
               </pre>
