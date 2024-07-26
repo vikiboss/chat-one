@@ -165,7 +165,7 @@ export function App() {
 
       <div className="flex flex-col gap-2 flex-wrap">
         <h3 className="my-2">Group</h3>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           {state.groups.map((group) => {
             return (
               <div
