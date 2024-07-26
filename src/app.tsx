@@ -145,20 +145,25 @@ export function App() {
         <div className="flex gap-2">
           {state.groups.map((group) => {
             return (
-              <button
+              <div
                 key={group.group_id}
-                type="button"
-                title={group.group_id}
                 onClick={() => {
                   mutate.active = { type: 'group', id: group.group_id, name: group.group_name }
                 }}
                 className={cn(
-                  'appearance-none border-none text-xs bg-amber/20 px-2 py-1 rounded hover:bg-amber/36 hover:cursor-pointer',
-                  state.active?.type === 'group' && state.active.id === group.group_id && 'bg-amber/36',
+                  'flex gap-1 items-center border-solid border-amber/20 pr-1 rounded hover:bg-amber/20 hover:cursor-pointer',
+                  state.active?.type === 'group' && state.active.id === group.group_id && 'bg-amber/20',
                 )}
               >
-                {group.group_name}
-              </button>
+                <img
+                  className="h-5 w-5 rounded"
+                  src={`https://p.qlogo.cn/gh/${group.group_id}/${group.group_id}/100`}
+                  alt="avatar"
+                />
+                <div title={group.group_id} className={cn('text-xs')}>
+                  {group.group_name}
+                </div>
+              </div>
             )
           })}
         </div>
@@ -166,20 +171,25 @@ export function App() {
         <div className="flex gap-2 flex-wrap">
           {state.friends.map((friend) => {
             return (
-              <button
-                type="button"
+              <div
                 key={friend.user_id}
-                title={friend.user_id}
                 onClick={() => {
                   mutate.active = { type: 'private', id: friend.user_id, name: friend.nickname }
                 }}
                 className={cn(
-                  'appearance-none border-none text-xs bg-lime/20 px-2 py-1 rounded hover:bg-lime/36 hover:cursor-pointer',
-                  state.active?.type === 'group' && state.active.id === friend.group_id && 'bg-lime/36',
+                  'flex gap-1 items-center border-solid border-lime/20 pr-1 rounded hover:bg-lime/20 hover:cursor-pointer',
+                  state.active?.type === 'private' && state.active.id === friend.user_id && 'bg-lime/20',
                 )}
               >
-                {friend.nickname}
-              </button>
+                <img
+                  className="h-5 w-5 rounded"
+                  src={`https://avatar.viki.moe?qq=${friend.user_id}&size=100`}
+                  alt="avatar"
+                />
+                <div title={friend.user_id} className={cn('text-xs')}>
+                  {friend.nickname}
+                </div>
+              </div>
             )
           })}
         </div>
@@ -188,19 +198,18 @@ export function App() {
       <h3 className="my-2">
         {state.active
           ? state.active.type === 'group'
-            ? `Group: ${state.active.name}`
-            : `Private: ${state.active.name}`
+            ? `[Chat: Group] ${state.active.name} (${state.active.id})`
+            : `[Chat: Private] ${state.active.name} (${state.active.id})`
           : 'No Active'}
       </h3>
 
       <div>
         {histories.map((e) => {
           return (
-            <div key={e.message_id} className="border border-solid rounded border-amber/36 my-4 px-2 py-1 mx-2">
-              <div className="flex gap-2">
-                <div>{'group_id' in e ? `[G-${e.group_id}]` : `[F-${e.user_id}]`}</div>
-                <div>{e.sender.nickname ?? 'Unknown'} </div>
-                <div className="text-gray/60">{new Date(e.time * 1000).toLocaleString('zh-CN')}</div>
+            <div key={e.message_id} className="border border-solid rounded border-amber/20 my-4 px-2 py-1 mx-2">
+              <div className="flex items-center gap-2">
+                <div className="flex text-xs px-1 py-0.5 rounded bg-blue-2/20">{e.sender.nickname ?? 'Unknown'} </div>
+                <div className="text-xs text-gray/60">{new Date(e.time * 1000).toLocaleString('zh-CN')}</div>
               </div>
               <pre className="text-wrap">
                 {e.message.map((e: any, idx) => {
@@ -235,8 +244,8 @@ export function App() {
         })}
       </div>
 
-      <div className="fixed absolute bottom-4 w-full flex">
-        <input id="msg-input" {...input.props} type="text" className="text-lg mx-4 flex-1" />
+      <div className="fixed absolute bottom-0 pb-4 w-full px-4 flex">
+        <input id="msg-input" {...input.props} type="text" className="text-lg flex-1" />
       </div>
     </div>
   )
