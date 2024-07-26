@@ -104,7 +104,7 @@ export namespace OneBot {
     sub_type: string
     message_id: number
     user_id: number
-    message: string
+    message: any[]
     raw_message: string
     font: number
   }
