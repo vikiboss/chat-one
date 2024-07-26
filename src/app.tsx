@@ -108,14 +108,14 @@ export function App() {
   })
 
   const histories = state.history.filter((e) => {
-    if (state.active === undefined) return false
+    if (state.active === undefined) return true
 
     if (state.active.type === 'group') {
       return 'group_id' in e && e.group_id === state.active.id
     }
 
     if (state.active.type === 'private') {
-      return 'user_id' in e && e.user_id === state.active.id
+      return !('group_id' in e) && e.user_id === state.active.id
     }
 
     return true
@@ -223,7 +223,7 @@ export function App() {
           ? state.active.type === 'group'
             ? `[Chat: Group] ${state.active.name} (${state.active.id})`
             : `[Chat: Private] ${state.active.name} (${state.active.id})`
-          : 'No Active'}
+          : 'No Active, show all'}
       </h3>
 
       <div>
