@@ -1,4 +1,5 @@
 import { cn } from '@/utils'
+import { toast } from 'react-hot-toast'
 import { useChatList } from './hooks/use-chat-list'
 import { useChatSession } from './hooks/use-chat-session'
 import { chatListStore } from './store'
@@ -23,7 +24,11 @@ export function ChatList() {
   }, [session])
 
   const sendMsg = useAsyncFn(async () => {
-    const target = homeStore.mutate.contactList.find((c) => c.id === session.id && c.type === 'group')
+    if (!msgInput.value) {
+      toast.error('Message cannot be empty')
+      return
+    }
+    const target = homeStore.mutate.contactList.find((c) => c.id === session.id && c.type === session.type)
     if (!target) return
 
     const commonMsg = {
@@ -71,6 +76,11 @@ export function ChatList() {
         })
       }
     }
+
+    msgInput.setValue('')
+
+    homeStore.mutate.contactList.splice(homeStore.mutate.contactList.indexOf(target), 1)
+    homeStore.mutate.contactList.unshift(target)
   })
 
   return (
@@ -130,15 +140,18 @@ export function ChatList() {
               </div>
               <div ref={ref} className="w-full h-[calc(100vh-358px)] w-full overflow-scroll my-2">
                 {session.history.map((msg) => {
+                  const isSelf = msg.sender.user_id === info?.user_id
+
                   return (
-                    <div key={msg.message_id} className="flex gap-2 p-2">
-                      <Avatar rounded item={{ type: 'private', id: msg.user_id }} />
-                      <div className="flex flex-col">
-                        <div className="flex items-center gap-1">
-                          <div className="font-bold">{msg.sender.nickname}</div>
+                    <div key={msg.message_id} className="flex w-full gap-2 p-2">
+                      {!isSelf && <Avatar rounded item={{ type: 'private', id: msg.user_id }} />}
+                      <div className={cn('flex flex-col w-full', isSelf ? 'items-end' : '')}>
+                        <div className={cn('flex items-center gap-1 text-right')}>
+                          {!isSelf && <div className="font-bold">{msg.sender.nickname}</div>}
                           <div className="text-gray/60 text-xs">
                             {new Date(msg.time * 1000).toLocaleString('zh-CN')}
                           </div>
+                          {isSelf && <div className="font-bold">{msg.sender.nickname}</div>}
                         </div>
                         <pre className="text-wrap mt-1 mb-0 font-sans">
                           {msg.message.map((e: any, idx) => {
@@ -194,6 +207,7 @@ export function ChatList() {
                           })}
                         </pre>
                       </div>
+                      {isSelf && <Avatar rounded item={{ type: 'private', id: msg.user_id }} />}
                     </div>
                   )
                 })}
@@ -201,9 +215,8 @@ export function ChatList() {
             </div>
             <div className="bottom-0 w-full flex items-center gap-2">
               <Input {...msgInput.props} disabled={sendMsg.loading} onPressEnter={sendMsg.run} />
-              <Button onClick={sendMsg.run} loading={sendMsg.loading} className="flex items-center gap-2">
+              <Button onClick={sendMsg.run} loading={sendMsg.loading} className="flex items-center">
                 <span className="i-mdi-send" />
-                <span>Send</span>
               </Button>
             </div>
           </>

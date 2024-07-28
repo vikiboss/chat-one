@@ -7,8 +7,6 @@ export function useWsListener() {
   useEventListener(wsApi.instance, 'message', (message: MessageEvent) => {
     const msg = JSON.parse(message.data)
 
-    console.log(msg)
-
     switch (msg.post_type) {
       case 'message': {
         const target = homeStore.mutate.contactList.find((c) => {
