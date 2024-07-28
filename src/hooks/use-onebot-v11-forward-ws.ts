@@ -1,6 +1,5 @@
-import { useCreation, useEventBus } from '@shined/react-use'
+import { useEventBus } from '@shined/react-use'
 import { useWebsocket } from './use-websocket'
-import { uuid } from '../utils/uuid'
 
 export interface UseOneBotV11ForwardWSOptions {
   onMessage?: (message: OneBot.GroupMessage | OneBot.PrivateMessage) => void
@@ -26,7 +25,6 @@ export function useOnebotV11ForwardWS(url: string, options: UseOneBotV11ForwardW
   } = options
 
   const bus = useEventBus(busKey)
-  const actions = useCreation(() => new Set())
 
   const apiWs = useWebsocket(url, {
     onOpen: onConnected,
@@ -58,35 +56,6 @@ export function useOnebotV11ForwardWS(url: string, options: UseOneBotV11ForwardW
       }
     },
   })
-
-  function genRetPromise<Data>() {
-    const actionId = uuid()
-    actions.add(actionId)
-
-    return {
-      retPromise: new Promise<Data>((resolve) => {
-        bus.on((event, data: Data) => {
-          if (event === `action:${actionId}`) {
-            actions.delete(actionId)
-            if (actions.size === 0) bus.cleanup()
-            resolve(data)
-          }
-        })
-      }),
-      actionId,
-    }
-  }
-
-  const api = useCreation(() => ({
-    action: <Data>(action: string, params: Record<string, unknown> = {}) => {
-      const { retPromise, actionId } = genRetPromise<Data>()
-      apiWs.current?.send(JSON.stringify({ action, params, echo: actionId }))
-      return retPromise
-    },
-    ws: apiWs,
-  }))
-
-  return api
 }
 
 export namespace OneBot {

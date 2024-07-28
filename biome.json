@@ -10,6 +10,7 @@
     "enabled": true
   },
   "files": {
+    "include": ["./src/**/*", "./**/*.ts"],
     "ignoreUnknown": true
   },
   "linter": {
@@ -18,6 +19,9 @@
       "recommended": true,
       "suspicious": {
         "noExplicitAny": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off"
       },
       "a11y": {
         "useKeyWithClickEvents": "off",
