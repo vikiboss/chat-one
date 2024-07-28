@@ -12,24 +12,28 @@ export const useContactList = () => {
     const { data: pList = [] } = await api.action<{ data: OneBot.PrivateInfo[] }>('get_friend_list')
 
     homeStore.mutate.contactList = [
-      ...gList.map((e) => ({
-        id: e.group_id,
-        name: e.group_name,
-        type: 'group' as const,
-        info: e,
-        history: [],
-        chatting: false,
-        unreadCount: 0,
-      })),
-      ...pList.map((e) => ({
-        id: e.user_id,
-        name: e.nickname,
-        type: 'private' as const,
-        info: e,
-        history: [],
-        chatting: false,
-        unreadCount: 0,
-      })),
+      ...gList
+        .map((e) => ({
+          id: e.group_id,
+          name: e.group_name,
+          type: 'group' as const,
+          info: e,
+          history: [],
+          chatting: false,
+          unreadCount: 0,
+        }))
+        .filter((e, idx, arr) => arr.findIndex((t) => t.id === e.id) === idx),
+      ...pList
+        .map((e) => ({
+          id: e.user_id,
+          name: e.nickname,
+          type: 'private' as const,
+          info: e,
+          history: [],
+          chatting: false,
+          unreadCount: 0,
+        }))
+        .filter((e, idx, arr) => arr.findIndex((t) => t.id === e.id) === idx),
     ]
   })
 

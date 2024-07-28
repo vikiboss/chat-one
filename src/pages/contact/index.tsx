@@ -17,7 +17,7 @@ export function Contact() {
             const isInChat = chatList.find((e) => e.type === 'group' && e.id === g.id)
             return (
               <Button
-                key={g.id}
+                key={g.info.group_id}
                 size="small"
                 status={isInChat ? 'success' : 'default'}
                 className="size-full flex items-center gap-2 py-1"
@@ -41,7 +41,7 @@ export function Contact() {
             const isInChat = chatList.find((e) => e.type === 'private' && e.id === f.id)
             return (
               <Button
-                key={f.id}
+                key={f.info.user_id}
                 size="small"
                 status={isInChat ? 'success' : 'default'}
                 className="size-full flex items-center gap-2 py-1"

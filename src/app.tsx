@@ -5,8 +5,11 @@ import { globalStore, useWsUrl } from './store'
 import { useEventBus } from '@shined/react-use'
 import { useWebsocket } from './hooks/use-websocket'
 import { useOneBotApi } from './hooks/use-onebot-api'
+import { useDarkMode } from './hooks/use-dark-mode'
 
 export function App() {
+  useDarkMode()
+
   const api = useOneBotApi()
   const bus = useEventBus(Symbol.for('api_ret'))
 

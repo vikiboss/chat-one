@@ -7,7 +7,11 @@ export default defineConfig({
     },
   },
   presets: [
-    presetUno(),
+    presetUno({
+      'dark': {
+        dark: '[arco-theme="dark"]'
+      }
+    }),
     presetAttributify(),
     presetIcons({
       scale: 1.2,
