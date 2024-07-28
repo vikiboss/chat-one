@@ -1,5 +1,4 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
-import { Temp } from './pages/temp'
 import { Home } from './pages'
 import { Chat } from './pages/chat-list/chat'
 import { Connect } from './pages/connect'
@@ -40,10 +39,6 @@ export const router = createBrowserRouter(
     {
       path: '/connect',
       element: <Connect />,
-    },
-    {
-      path: '/temp',
-      element: <Temp />,
     },
   ],
   {},
