@@ -1,6 +1,6 @@
-# React + TS + Vite + UnoCS
+# Chat One
 
-A web project template generate by [templates](https://github.com/vikiboss/templates).
+> All-in-one onebot chat platform, generate by [templates](https://github.com/vikiboss/templates).
 
 ## Tech Stack
 
@@ -8,3 +8,7 @@ A web project template generate by [templates](https://github.com/vikiboss/templ
 - [x] [TypeScript](https://www.typescriptlang.org/)
 - [x] [UnoCSS](https://unocss.dev/)
 - [x] [Vite](https://vitejs.dev/)
+
+## License 
+
+MIT

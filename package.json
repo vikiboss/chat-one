@@ -1,9 +1,9 @@
 {
-  "name": "react-ts-vite-unocss-template",
+  "name": "chat-one",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@8.15.8",
-  "description": "react-ts-vite-unocss template",
+  "packageManager": "pnpm@9.6.0",
+  "description": "All-in-one onebot chat platform",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -15,7 +15,8 @@
     "@shined/reactive": "^0.1.3",
     "classnames": "^2.5.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.25.1"
   },
   "devDependencies": {
     "@types/node": "^20.14.12",
@@ -24,6 +25,6 @@
     "@vitejs/plugin-react-swc": "^3.7.0",
     "typescript": "^5.5.4",
     "unocss": "^0.60.4",
-    "vite": "^5.3.4"
+    "vite": "^5.3.5"
   }
 }
