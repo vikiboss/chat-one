@@ -1,9 +1,9 @@
 import { globalStore, useConnected } from '@/store'
-import { Button, Input } from '@arco-design/web-react'
 import { wait } from '@/utils/wait'
+import { Button, Input } from '@arco-design/web-react'
+import { useAsyncFn, useControlledComponent, useUpdateEffect } from '@shined/react-use'
 import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
-import { useAsyncFn, useControlledComponent, useUpdateEffect } from '@shined/react-use'
 
 export function Connect() {
   const navigate = useNavigate()

@@ -1,15 +1,15 @@
+import { Avatar } from '@/components/avatar'
+import { useOneBotApi } from '@/hooks/use-onebot-api'
+import { useUserInfo } from '@/store'
 import { cn } from '@/utils'
+import { Button, Input } from '@arco-design/web-react'
+import { useAsyncFn, useControlledComponent, useUpdateEffect } from '@shined/react-use'
+import { useRef } from 'react'
 import { toast } from 'react-hot-toast'
+import { homeStore } from '../store'
 import { useChatList } from './hooks/use-chat-list'
 import { useChatSession } from './hooks/use-chat-session'
 import { chatListStore } from './store'
-import { Avatar } from '@/components/avatar'
-import { useRef } from 'react'
-import { useAsyncFn, useControlledComponent, useUpdateEffect } from '@shined/react-use'
-import { Button, Input } from '@arco-design/web-react'
-import { homeStore } from '../store'
-import { useOneBotApi } from '@/hooks/use-onebot-api'
-import { useUserInfo } from '@/store'
 
 export function ChatList() {
   const api = useOneBotApi()

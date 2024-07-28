@@ -1,8 +1,8 @@
-import { Button } from '@arco-design/web-react'
-import { homeStore } from '../store'
-import { useChatList } from '../chat-list/hooks/use-chat-list'
-import { useContactList } from './hooks/use-contact-list'
 import { Avatar } from '@/components/avatar'
+import { Button } from '@arco-design/web-react'
+import { useChatList } from '../chat-list/hooks/use-chat-list'
+import { homeStore } from '../store'
+import { useContactList } from './hooks/use-contact-list'
 
 export function Contact() {
   const chatList = useChatList()

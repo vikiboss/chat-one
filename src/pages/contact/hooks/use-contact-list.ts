@@ -1,4 +1,4 @@
-import { useOneBotApi, type OneBot } from '@/hooks/use-onebot-api'
+import { type OneBot, useOneBotApi } from '@/hooks/use-onebot-api'
 import { useMount } from '@shined/react-use'
 import { homeStore } from '../../store'
 

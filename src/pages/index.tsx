@@ -1,9 +1,9 @@
+import { Avatar } from '@/components/avatar'
 import { globalStore, useConnected, useUserInfo } from '@/store'
 import { useMount } from '@shined/react-use'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useTab } from './hooks/use-tab'
 import { useWsListener } from './hooks/use-ws-listener'
-import { Avatar } from '@/components/avatar'
 
 export function Home() {
   useWsListener()

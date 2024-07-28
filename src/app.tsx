@@ -1,11 +1,11 @@
-import { RouterProvider } from 'react-router-dom'
-import { router } from './router'
-import { Toaster } from 'react-hot-toast'
-import { globalStore, useWsUrl } from './store'
 import { useEventBus } from '@shined/react-use'
-import { useWebsocket } from './hooks/use-websocket'
-import { useOneBotApi } from './hooks/use-onebot-api'
+import { Toaster } from 'react-hot-toast'
+import { RouterProvider } from 'react-router-dom'
 import { useDarkMode } from './hooks/use-dark-mode'
+import { useOneBotApi } from './hooks/use-onebot-api'
+import { useWebsocket } from './hooks/use-websocket'
+import { router } from './router'
+import { globalStore, useWsUrl } from './store'
 
 export function App() {
   useDarkMode()

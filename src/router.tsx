@@ -1,10 +1,10 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { Navigate, createBrowserRouter } from 'react-router-dom'
 import { Home } from './pages'
+import { ChatList } from './pages/chat-list'
 import { Chat } from './pages/chat-list/chat'
 import { Connect } from './pages/connect'
-import { ChatList } from './pages/chat-list'
-import { Setting } from './pages/setting'
 import { Contact } from './pages/contact'
+import { Setting } from './pages/setting'
 
 export const router = createBrowserRouter(
   [

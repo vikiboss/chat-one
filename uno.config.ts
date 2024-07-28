@@ -1,4 +1,4 @@
-import { defineConfig, presetUno, presetIcons, presetAttributify } from 'unocss'
+import { defineConfig, presetAttributify, presetIcons, presetUno } from 'unocss'
 
 export default defineConfig({
   content: {
@@ -8,9 +8,9 @@ export default defineConfig({
   },
   presets: [
     presetUno({
-      'dark': {
-        dark: '[arco-theme="dark"]'
-      }
+      dark: {
+        dark: '[arco-theme="dark"]',
+      },
     }),
     presetAttributify(),
     presetIcons({

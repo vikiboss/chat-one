@@ -1,7 +1,7 @@
 import { wsApi } from '@/store'
 import { useEventListener } from '@shined/react-use'
-import { homeStore } from '../store'
 import { chatListStore } from '../chat-list/store'
+import { homeStore } from '../store'
 
 export function useWsListener() {
   useEventListener(wsApi.instance, 'message', (message: MessageEvent) => {

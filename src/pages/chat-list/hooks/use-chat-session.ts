@@ -1,7 +1,7 @@
+import { useEffect } from 'react'
 import { chatListStore } from '../store'
 import { useActiveSession } from './use-active-session'
 import { useChatList } from './use-chat-list'
-import { useEffect } from 'react'
 
 export function useChatSession() {
   const chatList = useChatList()
