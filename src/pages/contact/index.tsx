@@ -1,12 +1,11 @@
 import { Avatar } from '@/components/avatar'
 import { Button } from '@arco-design/web-react'
-import { useChatList } from '../chat-list/hooks/use-chat-list'
 import { homeStore } from '../store'
 import { useContactList } from './hooks/use-contact-list'
 
 export function Contact() {
-  const chatList = useChatList()
-  const [friends, groups] = useContactList()
+  const [friends, groups, list] = useContactList()
+  const chatList = list.filter((c) => c.chatting || c.unreadCount > 0)
 
   return (
     <div>

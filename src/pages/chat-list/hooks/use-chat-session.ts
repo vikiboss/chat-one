@@ -21,5 +21,5 @@ export function useChatSession() {
     }
   }, [target, chatList[0]])
 
-  return target ?? chatList[0]
+  return [target ?? chatList[0], chatList] as const
 }

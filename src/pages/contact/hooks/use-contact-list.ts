@@ -1,6 +1,8 @@
-import { type OneBot, useOneBotApi } from '@/hooks/use-onebot-api'
+import { useOneBotApi } from '@/hooks/use-onebot-api'
 import { useMount } from '@shined/react-use'
 import { homeStore } from '../../store'
+
+import type { OneBot } from '@/hooks/use-onebot-api'
 
 export const useContactList = () => {
   const api = useOneBotApi()
@@ -23,17 +25,15 @@ export const useContactList = () => {
           unreadCount: 0,
         }))
         .filter((e, idx, arr) => arr.findIndex((t) => t.id === e.id) === idx),
-      ...pList
-        .map((e) => ({
-          id: e.user_id,
-          name: e.nickname,
-          type: 'private' as const,
-          info: e,
-          history: [],
-          chatting: false,
-          unreadCount: 0,
-        }))
-        .filter((e, idx, arr) => arr.findIndex((t) => t.id === e.id) === idx),
+      ...pList.map((e) => ({
+        id: e.user_id,
+        name: e.nickname,
+        type: 'private' as const,
+        info: e,
+        history: [],
+        chatting: false,
+        unreadCount: 0,
+      })),
     ]
   })
 

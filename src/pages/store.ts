@@ -21,6 +21,6 @@ export type ContactItem = {
 )
 
 export const homeStore = create({
-  tab: location.pathname.replace('/', '') as 'chat' | 'contact' | 'setting',
+  tab: (location.pathname.replace('/', '') || 'chat') as 'chat' | 'contact' | 'setting',
   contactList: [] as ContactItem[],
 })

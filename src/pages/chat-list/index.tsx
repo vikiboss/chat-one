@@ -3,25 +3,29 @@ import { useOneBotApi } from '@/hooks/use-onebot-api'
 import { useUserInfo } from '@/store'
 import { cn } from '@/utils'
 import { Button, Input } from '@arco-design/web-react'
-import { useAsyncFn, useControlledComponent, useUpdateEffect } from '@shined/react-use'
-import { useRef } from 'react'
+import { useAsyncFn, useControlledComponent, useScroll, useUpdateEffect } from '@shined/react-use'
 import { toast } from 'react-hot-toast'
 import { homeStore } from '../store'
-import { useChatList } from './hooks/use-chat-list'
 import { useChatSession } from './hooks/use-chat-session'
 import { chatListStore } from './store'
+import { useTab } from '../hooks/use-tab'
+import { useListAnimation } from '@/hooks/use-list-animation'
 
 export function ChatList() {
+  const tab = useTab()
   const api = useOneBotApi()
-  const list = useChatList()
   const info = useUserInfo()
-  const ref = useRef<HTMLDivElement>(null)
-  const session = useChatSession()
+  const [session, list] = useChatSession()
   const msgInput = useControlledComponent('')
+  const chatListAnimationRef = useListAnimation()
+  const historyAnimationRef = useListAnimation()
+  const scroll = useScroll('#chat-history', { behavior: 'smooth' })
 
   useUpdateEffect(() => {
-    ref.current?.scrollTo(0, ref.current.scrollHeight)
-  }, [session])
+    if (tab.value === 'chat') {
+      scroll.scrollToEnd('y')
+    }
+  }, [session, tab.value])
 
   const sendMsg = useAsyncFn(async () => {
     if (!msgInput.value) {
@@ -89,6 +93,7 @@ export function ChatList() {
   return (
     <div className="flex gap-2">
       <div
+        ref={chatListAnimationRef}
         className={cn(
           'pl-0 flex flex-col h-[calc(100vh-260px)] overflow-y-scroll',
           list.length === 0 ? 'w-full' : 'w-240px',
@@ -145,7 +150,7 @@ export function ChatList() {
         <div className="flex-1 overflow-hidden">
           {session ? (
             <>
-              <div className="flex flex-col flex-1">
+              <div className="flex flex-col gap-2">
                 <div className="flex rounded items-center gap-2 w-full p-2 bg-zinc-1/12">
                   <Avatar item={session} />
                   <div>
@@ -153,7 +158,11 @@ export function ChatList() {
                     {session.type === 'group' ? ` (${session.info.member_count}/${session.info.max_member_count})` : ''}
                   </div>
                 </div>
-                <div ref={ref} className="w-full h-[calc(100vh-358px)] w-full overflow-scroll my-2">
+                <div
+                  id="chat-history"
+                  ref={historyAnimationRef}
+                  className="w-full h-[calc(100vh-358px)] overflow-scroll"
+                >
                   {session.history.map((msg) => {
                     const isSelf = msg.sender.user_id === info?.user_id
 
@@ -227,12 +236,12 @@ export function ChatList() {
                     )
                   })}
                 </div>
-              </div>
-              <div className="bottom-0 w-full flex items-center gap-2">
-                <Input {...msgInput.props} disabled={sendMsg.loading} onPressEnter={sendMsg.run} />
-                <Button onClick={sendMsg.run} loading={sendMsg.loading} className="flex items-center">
-                  <span className="i-mdi-send" />
-                </Button>
+                <div className="w-full flex items-center gap-2">
+                  <Input {...msgInput.props} disabled={sendMsg.loading} onPressEnter={sendMsg.run} />
+                  <Button onClick={sendMsg.run} loading={sendMsg.loading} className="flex items-center">
+                    <span className="i-mdi-send" />
+                  </Button>
+                </div>
               </div>
             </>
           ) : (
