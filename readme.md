@@ -6,6 +6,8 @@ All-in-one Web OneBot client, you should deploy a [OneBot](https://onebot.dev/) 
 
 Then, open [Chat One](https://chat-one.viki.moe) to input **forward** ws host and access_key.
 
+![screenshot](./screenshot.png)
+
 ## Tech Stack
 
 - [x] [React](https://reactjs.org/)
