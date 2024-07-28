@@ -28,11 +28,12 @@ export function ChatList() {
       toast.error('Message cannot be empty')
       return
     }
+
     const target = homeStore.mutate.contactList.find((c) => c.id === session.id && c.type === session.type)
+
     if (!target) return
 
     const commonMsg = {
-      message_id: Date.now(),
       user_id: info?.user_id ?? 0,
       sender: {
         user_id: info?.user_id ?? 0,
@@ -47,7 +48,7 @@ export function ChatList() {
     } as const
 
     if (session.type === 'group') {
-      await api.action('send_group_msg', {
+      const { data } = await api.action<{ data: { message_id: number } }>('send_group_msg', {
         group_id: session.id,
         message: msgInput.value,
       })
@@ -55,6 +56,7 @@ export function ChatList() {
       if (target.type === 'group') {
         target.history.push({
           ...commonMsg,
+          message_id: data?.message_id ?? Date.now(),
           group_id: session.id,
           anonymous: null,
           message_type: 'group',
@@ -62,7 +64,7 @@ export function ChatList() {
         })
       }
     } else {
-      await api.action('send_private_msg', {
+      const { data } = await api.action<{ data: { message_id: number } }>('send_private_msg', {
         user_id: session.id,
         message: msgInput.value,
       })
@@ -70,6 +72,7 @@ export function ChatList() {
       if (target.type === 'private') {
         target.history.push({
           ...commonMsg,
+          message_id: data?.message_id ?? Date.now(),
           sender: { user_id: info?.user_id ?? 0, nickname: info?.nickname ?? 'Me' },
           message_type: 'private',
           sub_type: 'friend',
@@ -95,7 +98,7 @@ export function ChatList() {
               key={item.id + item.type}
               title={item.type === 'group' ? `Group: ${item.name}` : `Private: ${item.name} (${item.info.nickname})`}
               className={cn(
-                'cursor-pointer hover:bg-zinc-3/12 w-full flex items-center justify-between gap-2 px-3 py-1 border-0 border-solid border-b-1px border-b-zinc/12 last:border-b-transparent',
+                'relative cursor-pointer hover:bg-zinc-3/12 w-full flex items-center justify-between gap-2 px-3 py-1 border-0 border-solid border-b-1px border-b-zinc/12 last:border-b-transparent',
                 isActive ? 'bg-zinc-3/12' : 'bg-transparent',
               )}
               onClick={() => {
@@ -113,13 +116,15 @@ export function ChatList() {
                 <Avatar item={item} />
                 <div className="truncate">
                   <div className="text-nowrap truncate">{item.name}</div>
-                  <div className="text-gray/60 text-xs">
+                  <div className="text-nowrap text-gray/60 text-xs truncate">
                     {lastMessage ? `${lastMessage?.sender.nickname}: ${lastMessage.raw_message}` : '[No message yet]'}
                   </div>
                 </div>
               </div>
               {item.unreadCount > 0 && (
-                <div className="inline-block font-bold text-amber size-5 text-center">{item.unreadCount}</div>
+                <div className="absolute right-2 inline-block font-bold text-amber size-5 text-center">
+                  {item.unreadCount}
+                </div>
               )}
             </div>
           )
@@ -162,7 +167,7 @@ export function ChatList() {
                                 return (
                                   <img
                                     key={`${e.type}-${idx}`}
-                                    className="w-20 rounded"
+                                    className="w-24 rounded"
                                     src={e.data.url}
                                     alt="chat-image"
                                   />

@@ -19,7 +19,6 @@ export function useWsListener() {
         if (target) {
           if (id === target.id && type === target.type) {
             target.unreadCount = 0
-            target.chatting = true
           } else {
             target.unreadCount++
             homeStore.mutate.contactList.splice(homeStore.mutate.contactList.indexOf(target), 1)
