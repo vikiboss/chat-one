@@ -3,7 +3,7 @@ import { useOneBotApi } from '@/hooks/use-onebot-api'
 import { useUserInfo } from '@/store'
 import { cn } from '@/utils'
 import { Button, Input } from '@arco-design/web-react'
-import { useAsyncFn, useControlledComponent, useScroll, useUpdateEffect } from '@shined/react-use'
+import { useAsyncFn, useControlledComponent, useScroll, useUpdateLayoutEffect } from '@shined/react-use'
 import { toast } from 'react-hot-toast'
 import { homeStore } from '../store'
 import { useChatSession } from './hooks/use-chat-session'
@@ -19,9 +19,9 @@ export function ChatList() {
   const msgInput = useControlledComponent('')
   const chatListAnimationRef = useListAnimation()
   const historyAnimationRef = useListAnimation()
-  const scroll = useScroll('#chat-history', { behavior: 'smooth' })
+  const scroll = useScroll(() => '#chat-history', { behavior: 'smooth' })
 
-  useUpdateEffect(() => {
+  useUpdateLayoutEffect(() => {
     if (tab.value === 'chat') {
       scroll.scrollToEnd('y')
     }
@@ -186,7 +186,7 @@ export function ChatList() {
                                   return (
                                     <img
                                       key={`${e.type}-${idx}`}
-                                      className="w-24 rounded"
+                                      className="h-20 rounded"
                                       src={e.data.url}
                                       alt="chat-image"
                                     />
@@ -195,7 +195,7 @@ export function ChatList() {
                                   return (
                                     <div
                                       key={`${e.type}-${idx}`}
-                                      className="inline-flex flex-center gap-1 mx-1 bg-blue/20 text-blue-5 px-1 py-0.5 rounded"
+                                      className="inline-flex flex-center gap-1 mx-1 bg-blue/20 text-blue-5 px-1 py-0.25 rounded"
                                     >
                                       <span>@</span>
                                       <Avatar size="size-4" item={{ type: 'private', id: e.data.qq }} />
