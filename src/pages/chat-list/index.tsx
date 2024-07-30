@@ -112,6 +112,7 @@ export function ChatList() {
             (lastMessage?.message.find((e) => e.type === 'image') ? '[图片]' : '') ||
             (lastMessage?.message.find((e) => e.type === 'mface') ? '[图片表情]' : '') ||
             (lastMessage?.message.find((e) => e.type === 'json') ? '[卡片消息]' : '') ||
+            (lastMessage?.message.find((e) => e.type === 'record') ? '[语音消息]' : '') ||
             (lastMessage?.message.find((e) => e.type === 'face') ? '[QQ 表情]' : '') ||
             (lastMessage?.message.find((e) => e.type === 'forward') ? '[合并转发]' : '') ||
             '[No Message]'
@@ -255,6 +256,14 @@ export function ChatList() {
 
                                 case 'reply':
                                   return <span key={`${e.type}-${idx}`}>[reply:{e.data.id}]</span>
+
+                                case 'record':
+                                  return (
+                                    <audio key={`${e.type}-${idx}`} controls autoPlay={false}>
+                                      <track kind="captions" />
+                                      <source src={e.data.url} type='audio/mp3; codecs="mp3"' />
+                                    </audio>
+                                  )
 
                                 case 'mface':
                                   return e.data.url ? (
