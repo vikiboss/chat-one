@@ -102,6 +102,15 @@ export function ChatList() {
         {list.map((item) => {
           const isActive = item.id === session.id && item.type === session.type
           const lastMessage = item.history[item.history.length - 1]
+          const lastMsgName = lastMessage?.sender.nickname ?? 'Unknown'
+
+          const lastMsgText =
+            lastMessage?.message.find((e) => e.type === 'text')?.data.text ||
+            (lastMessage?.message.find((e) => e.type === 'image') ? '[图片]' : '') ||
+            (lastMessage?.message.find((e) => e.type === 'mface') ? '[图片表情]' : '') ||
+            (lastMessage?.message.find((e) => e.type === 'json') ? '[卡片消息]' : '') ||
+            (lastMessage?.message.find((e) => e.type === 'face') ? '[QQ 表情]' : '') ||
+            '[No Message]'
 
           return (
             <div
@@ -122,12 +131,12 @@ export function ChatList() {
                 chatListStore.mutate.session = { id: item.id, type: item.type }
               }}
             >
-              <div className="flex gap-2 items-center">
+              <div className="flex gap-2 items-center truncate">
                 <Avatar item={item} />
                 <div className="truncate">
                   <div className="text-nowrap truncate">{item.name}</div>
                   <div className="text-nowrap text-gray/60 text-xs truncate">
-                    {lastMessage ? `${lastMessage?.sender.nickname}: ${lastMessage.raw_message}` : '[No message yet]'}
+                    {lastMsgName}: {lastMsgText}
                   </div>
                 </div>
               </div>
@@ -165,6 +174,17 @@ export function ChatList() {
                 >
                   {session.history.map((msg) => {
                     const isSelf = msg.sender.user_id === info?.user_id
+
+                    const singleItem = ['mface', 'record', 'video', 'json', 'xml'] as const
+
+                    for (const item of singleItem) {
+                      const single = msg.message.find((e) => e.type === item)
+
+                      if (single) {
+                        msg.message = [single]
+                        break
+                      }
+                    }
 
                     return (
                       <div key={msg.message_id} className="flex w-full gap-2 p-2">
