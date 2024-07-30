@@ -10,6 +10,7 @@ import { useChatSession } from './hooks/use-chat-session'
 import { chatListStore } from './store'
 import { useTab } from '../hooks/use-tab'
 import { useListAnimation } from '@/hooks/use-list-animation'
+import { qqFaceList } from '@/utils/qq-face'
 
 export function ChatList() {
   const tab = useTab()
@@ -202,6 +203,7 @@ export function ChatList() {
                               switch (e.type) {
                                 case 'text':
                                   return <span key={`${e.type}-${idx}`}>{e.data.text}</span>
+
                                 case 'image':
                                   return (
                                     <img
@@ -211,6 +213,7 @@ export function ChatList() {
                                       alt="chat-image"
                                     />
                                   )
+
                                 case 'at':
                                   return (
                                     <div
@@ -221,19 +224,29 @@ export function ChatList() {
                                       <Avatar size="size-4" item={{ type: 'private', id: e.data.qq }} />
                                     </div>
                                   )
-                                case 'face':
-                                  return (
+
+                                case 'face': {
+                                  const target = qqFaceList.find((f) => f.id === +e.data.id)
+                                  const isNormalFace = !!target
+
+                                  return isNormalFace ? (
                                     <img
                                       key={`${e.type}-${idx}`}
                                       className="h-5"
-                                      src={`/face/s${e.data.id}.gif`}
+                                      src={`/face/s${e.data.id}.${target.format}`}
                                       alt="face"
                                     />
+                                  ) : (
+                                    `[超级表情, id: ${e.data.id}]`
                                   )
+                                }
+
                                 case 'json':
                                   return <span key={`${e.type}-${idx}`}>{JSON.parse(e.data.data).prompt}</span>
+
                                 case 'reply':
                                   return <span key={`${e.type}-${idx}`}>[reply:{e.data.id}]</span>
+
                                 case 'mface':
                                   return e.data.url ? (
                                     <img
@@ -245,6 +258,7 @@ export function ChatList() {
                                   ) : (
                                     <span key={`${e.type}-${idx}`}>[mface:{e.data.id}]</span>
                                   )
+
                                 default:
                                   return <span key={`${e.type}-${idx}`}>{JSON.stringify(e)}</span>
                               }
