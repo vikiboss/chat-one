@@ -255,7 +255,7 @@ export function ChatList() {
                                   )
 
                                 case 'reply':
-                                  return <span key={`${e.type}-${idx}`}>[reply:{e.data.id}]</span>
+                                  return <span key={`${e.type}-${idx}`}>[回复]</span>
 
                                 case 'record':
                                   return (
