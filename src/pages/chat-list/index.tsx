@@ -3,7 +3,7 @@ import { useOneBotApi } from '@/hooks/use-onebot-api'
 import { useUserInfo } from '@/store'
 import { cn } from '@/utils'
 import { Button, Input } from '@arco-design/web-react'
-import { useAsyncFn, useControlledComponent, useScroll, useUpdateLayoutEffect } from '@shined/react-use'
+import { useAsyncFn, useControlledComponent, useKeyModifier, useScroll, useUpdateLayoutEffect } from '@shined/react-use'
 import { toast } from 'react-hot-toast'
 import { homeStore } from '../store'
 import { useChatSession } from './hooks/use-chat-session'
@@ -21,6 +21,8 @@ export function ChatList() {
   const chatListAnimationRef = useListAnimation()
   const historyAnimationRef = useListAnimation()
   const scroll = useScroll(() => '#chat-history', { behavior: 'smooth' })
+
+  const isShiftPressed = useKeyModifier('Shift')
 
   useUpdateLayoutEffect(() => {
     if (tab.value === 'chat') {
@@ -136,9 +138,11 @@ export function ChatList() {
                 <Avatar item={item} />
                 <div className="truncate">
                   <div className="text-nowrap truncate">{item.name}</div>
-                  <div className="text-nowrap text-gray/60 text-xs truncate">
-                    {lastMsgName}: {lastMsgText}
-                  </div>
+                  {lastMessage && (
+                    <div className="text-nowrap text-gray/60 text-xs truncate">
+                      {lastMsgName}: {lastMsgText}
+                    </div>
+                  )}
                 </div>
               </div>
               {item.unreadCount > 0 && (
@@ -171,7 +175,7 @@ export function ChatList() {
                 <div
                   id="chat-history"
                   ref={historyAnimationRef}
-                  className="w-full h-[calc(100vh-358px)] overflow-scroll"
+                  className="w-full h-[calc(100vh-400px)] overflow-scroll"
                 >
                   {session.history.map((msg) => {
                     const isSelf = msg.sender.user_id === info?.user_id
@@ -274,9 +278,21 @@ export function ChatList() {
                     )
                   })}
                 </div>
-                <div className="w-full flex items-center gap-2">
-                  <Input {...msgInput.props} disabled={sendMsg.loading} onPressEnter={sendMsg.run} />
-                  <Button onClick={sendMsg.run} loading={sendMsg.loading} className="flex items-center">
+                <div className="relative w-full flex items-center gap-2">
+                  <Input.TextArea
+                    {...msgInput.props}
+                    allowClear
+                    autoSize={{ maxRows: 3, minRows: 3 }}
+                    disabled={sendMsg.loading}
+                    onPressEnter={() => {
+                      !isShiftPressed && sendMsg.run()
+                    }}
+                  />
+                  <Button
+                    onClick={sendMsg.run}
+                    loading={sendMsg.loading}
+                    className="absolute bottom-2 right-2 flex items-center"
+                  >
                     <span className="i-mdi-send" />
                   </Button>
                 </div>
