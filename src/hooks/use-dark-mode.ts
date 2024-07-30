@@ -1,7 +1,7 @@
 import { useMediaQuery } from '@shined/react-use'
 import { useEffect } from 'react'
 
-export function useDarkMode() {
+export function useAutoDarkMode() {
   const isDark = useMediaQuery('(prefers-color-scheme: dark)')
 
   useEffect(() => {

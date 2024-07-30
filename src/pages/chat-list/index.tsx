@@ -242,7 +242,11 @@ export function ChatList() {
                                 }
 
                                 case 'json':
-                                  return <span key={`${e.type}-${idx}`}>{JSON.parse(e.data.data).prompt}</span>
+                                  return (
+                                    <span key={`${e.type}-${idx}`}>
+                                      {JSON.parse(e.data.data).prompt || JSON.stringify(e.data)}
+                                    </span>
+                                  )
 
                                 case 'reply':
                                   return <span key={`${e.type}-${idx}`}>[reply:{e.data.id}]</span>

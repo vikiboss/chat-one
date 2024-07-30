@@ -1,14 +1,14 @@
 import { useEventBus } from '@shined/react-use'
 import { Toaster } from 'react-hot-toast'
 import { RouterProvider } from 'react-router-dom'
-import { useDarkMode } from './hooks/use-dark-mode'
+import { useAutoDarkMode } from './hooks/use-dark-mode'
 import { useOneBotApi } from './hooks/use-onebot-api'
 import { useWebsocket } from './hooks/use-websocket'
 import { router } from './router'
 import { globalStore, useWsUrl } from './store'
 
 export function App() {
-  useDarkMode()
+  useAutoDarkMode()
 
   const api = useOneBotApi()
   const bus = useEventBus(Symbol.for('api_ret'))
