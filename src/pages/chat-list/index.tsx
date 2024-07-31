@@ -257,6 +257,9 @@ export function ChatList() {
                                 case 'reply':
                                   return <span key={`${e.type}-${idx}`}>[回复]</span>
 
+                                case 'forward':
+                                  return <span key={`${e.type}-${idx}`}>[和并转发]</span>
+
                                 case 'record':
                                   return (
                                     <audio key={`${e.type}-${idx}`} controls autoPlay={false}>
