@@ -21,6 +21,7 @@ export function Avatar(props: Props) {
       className={cn(size, rounded ? 'rounded-full' : 'rounded', className)}
       src={`https://p.qlogo.cn/gh/${item.id}/${item.id}/${imgSize}`}
       {...imgProps}
+      title={item.id.toString()}
       alt="avatar"
     />
   ) : (
@@ -28,6 +29,7 @@ export function Avatar(props: Props) {
       className={cn(size, rounded ? 'rounded-full' : 'rounded', className)}
       src={`https://q.qlogo.cn/headimg_dl?dst_uin=${item.id}&spec=${imgSize}`}
       {...imgProps}
+      title={item.id.toString()}
       alt="avatar"
     />
   )

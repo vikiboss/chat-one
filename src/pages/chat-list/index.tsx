@@ -11,6 +11,7 @@ import { chatListStore } from './store'
 import { useTab } from '../hooks/use-tab'
 import { useListAnimation } from '@/hooks/use-list-animation'
 import { qqFaceList } from '@/utils/qq-face'
+import { useRef } from 'react'
 
 const blackList = [312982348]
 
@@ -18,17 +19,24 @@ export function ChatList() {
   const tab = useTab()
   const api = useOneBotApi()
   const info = useUserInfo()
+  const inputRef = useRef<any>(null)
   const [session, list] = useChatSession()
   const msgInput = useControlledComponent('')
   const chatListAnimationRef = useListAnimation()
   const historyAnimationRef = useListAnimation()
   const scroll = useScroll(() => '#chat-history', { behavior: 'smooth' })
-
   const isShiftPressed = useKeyModifier('Shift')
 
+  const isGroup = session.type === 'group'
+
   useUpdateEffect(() => {
-    if (tab.value === 'chat' && (scroll.arrivedState.bottom || !scroll.isScrolling)) {
-      scroll.scrollToEnd('y')
+    if (tab.value === 'chat') {
+      msgInput.setValue('')
+      inputRef.current.focus()
+
+      if (scroll.arrivedState.bottom || !scroll.isScrolling) {
+        scroll.scrollToEnd('y')
+      }
     }
   }, [session, tab.value])
 
@@ -56,7 +64,7 @@ export function ChatList() {
       font: 0,
     } as const
 
-    if (session.type === 'group') {
+    if (isGroup) {
       const { data } = await api.action<{ data: { message_id: number } }>('send_group_msg', {
         group_id: session.id,
         message: msgInput.value,
@@ -173,7 +181,7 @@ export function ChatList() {
                   <Avatar item={session} />
                   <div>
                     {session.name}
-                    {session.type === 'group' ? ` (${session.info.member_count}/${session.info.max_member_count})` : ''}
+                    {isGroup ? ` (${session.info.member_count}/${session.info.max_member_count})` : ''}
                   </div>
                 </div>
                 <div
@@ -208,6 +216,9 @@ export function ChatList() {
                       <div className="w-8" />
                     )
 
+                    const card = 'card' in msg.sender ? msg.sender.card : ''
+                    const name = card ? `${card} (${msg.sender.nickname})` : msg.sender.nickname
+
                     return (
                       <div
                         key={msg.message_id}
@@ -218,11 +229,11 @@ export function ChatList() {
                         <div className={cn('flex flex-col w-full', isSelf ? 'items-end' : '')}>
                           {!lastMessageIsSameUser && (
                             <div className={cn('flex items-center gap-1 text-right')}>
-                              {!isSelf && <div className="font-bold">{msg.sender.nickname}</div>}
+                              {!isSelf && <div className="font-bold">{name}</div>}
                               <div className="text-gray/60 text-xs transition-all opacity-0 group-hover:opacity-100">
                                 {new Date(msg.time * 1000).toLocaleString('zh-CN')}
                               </div>
-                              {isSelf && <div className="font-bold">{msg.sender.nickname}</div>}
+                              {isSelf && <div className="font-bold">{name}</div>}
                             </div>
                           )}
                           <pre className={cn('text-wrap mb-0 font-sans', !lastMessageIsSameUser ? 'mt-1' : 'mt-0')}>
@@ -325,6 +336,10 @@ export function ChatList() {
                   <Input.TextArea
                     {...msgInput.props}
                     allowClear
+                    autoFocus
+                    ref={(ref) => {
+                      inputRef.current = ref
+                    }}
                     className="rounded"
                     autoSize={{ maxRows: 3, minRows: 3 }}
                     disabled={sendMsg.loading}
