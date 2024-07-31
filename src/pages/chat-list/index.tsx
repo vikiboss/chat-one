@@ -26,7 +26,7 @@ export function ChatList() {
   const scroll = useScroll(() => '#chat-history', { behavior: 'smooth' })
   const isShiftPressed = useKeyModifier('Shift')
 
-  const isGroup = session.type === 'group'
+  const isGroup = session && session.type === 'group'
 
   useUpdateEffect(() => {
     if (tab.value === 'chat') {
