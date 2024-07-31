@@ -3,7 +3,7 @@ import { useOneBotApi } from '@/hooks/use-onebot-api'
 import { useUserInfo } from '@/store'
 import { cn } from '@/utils'
 import { Button, Input } from '@arco-design/web-react'
-import { useAsyncFn, useControlledComponent, useKeyModifier, useScroll, useUpdateLayoutEffect } from '@shined/react-use'
+import { useAsyncFn, useControlledComponent, useKeyModifier, useScroll, useUpdateEffect } from '@shined/react-use'
 import { toast } from 'react-hot-toast'
 import { homeStore } from '../store'
 import { useChatSession } from './hooks/use-chat-session'
@@ -24,8 +24,8 @@ export function ChatList() {
 
   const isShiftPressed = useKeyModifier('Shift')
 
-  useUpdateLayoutEffect(() => {
-    if (tab.value === 'chat') {
+  useUpdateEffect(() => {
+    if (tab.value === 'chat' && (scroll.arrivedState.bottom || !scroll.isScrolling)) {
       scroll.scrollToEnd('y')
     }
   }, [session, tab.value])
@@ -179,7 +179,7 @@ export function ChatList() {
                   ref={historyAnimationRef}
                   className="w-full h-[calc(100vh-400px)] overflow-scroll"
                 >
-                  {session.history.map((msg) => {
+                  {session.history.slice(-100).map((msg) => {
                     const isSelf = msg.sender.user_id === info?.user_id
 
                     const singleItem = ['mface', 'record', 'video', 'json', 'xml'] as const
