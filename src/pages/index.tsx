@@ -1,5 +1,5 @@
 import { Avatar } from '@/components/avatar'
-import { globalStore, useConnected, useUserInfo } from '@/store'
+import { globalStore, useConnected, useOnline, useUserInfo } from '@/store'
 import { useMount } from '@shined/react-use'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useTab } from './hooks/use-tab'
@@ -12,6 +12,7 @@ export function Home() {
   const info = useUserInfo()
   const navigate = useNavigate()
   const isConnected = useConnected()
+  const isOnline = useOnline()
   const hasHost = globalStore.useSnapshot((s) => !!s.ws.host)
 
   useMount(() => {
@@ -20,8 +21,8 @@ export function Home() {
     }
   })
 
-  if (!isConnected) {
-    return null
+  if (!isConnected && hasHost) {
+    return <div>WS 连接已断开</div>
   }
 
   return (
@@ -32,7 +33,7 @@ export function Home() {
             <div className="flex gap-1 items-center">
               <Avatar size="size-4" item={{ type: 'private', id: info.user_id }} />
               <div className="text-xs">
-                {info.nickname ?? '-'} ({info.user_id ?? '-'})
+                {info.nickname ?? '-'} - {info.user_id ?? '-'} - {isOnline ? 'Online' : 'Offline'}
               </div>
             </div>
           ) : (

@@ -1,4 +1,4 @@
-import { wsApi } from '@/store'
+import { globalStore, wsApi } from '@/store'
 import { useEventListener } from '@shined/react-use'
 import { chatListStore } from '../chat-list/store'
 import { homeStore } from '../store'
@@ -35,8 +35,17 @@ export function useWsListener() {
         break
       case 'request':
         break
-      case 'meta_event':
+      case 'meta_event': {
+        switch (msg.meta_event_type) {
+          case 'heartbeat': {
+            globalStore.mutate.isOnline = msg.status.online
+            break
+          }
+          default:
+            break
+        }
         break
+      }
       default:
         break
     }
