@@ -6,7 +6,7 @@ export const useOneBotApi = () => {
   const bus = useEventBus(Symbol.for('api_ret'))
   const actions = useCreation(() => new Set())
 
-  function genRetPromise<Data>(timeout = 3000) {
+  function genRetPromise<Data>(timeout = 6000) {
     const actionId = uuid()
     actions.add(actionId)
 
