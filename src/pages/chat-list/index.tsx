@@ -12,8 +12,7 @@ import { useTab } from '../hooks/use-tab'
 import { useListAnimation } from '@/hooks/use-list-animation'
 import { qqFaceList } from '@/utils/qq-face'
 import { useRef } from 'react'
-
-const blackList = [312982348]
+import { blackList } from '@/utils/blacklist'
 
 export function ChatList() {
   const tab = useTab()
@@ -114,7 +113,8 @@ export function ChatList() {
       >
         {list.map((item) => {
           const isActive = item.id === session.id && item.type === session.type
-          const lastMessage = item.history[item.history.length - 1]
+          const filteredHistory = item.history.filter((e) => blackList.some((id) => e.user_id !== id))
+          const lastMessage = filteredHistory[filteredHistory.length - 1]
           const lastMsgName = lastMessage?.sender.nickname ?? 'Unknown'
 
           const lastMsgText =

@@ -2,10 +2,13 @@ import { globalStore, wsApi } from '@/store'
 import { useEventListener } from '@shined/react-use'
 import { chatListStore } from '../chat-list/store'
 import { homeStore } from '../store'
+import { blackList } from '@/utils/blacklist'
 
 export function useWsListener() {
   useEventListener(wsApi.instance, 'message', (message: MessageEvent) => {
     const msg = JSON.parse(message.data)
+
+    const isInBlacklist = blackList.some((id) => msg.user_id === id)
 
     switch (msg.post_type) {
       case 'message': {
@@ -21,7 +24,7 @@ export function useWsListener() {
             target.unreadCount = 0
             target.chatting = true
           } else {
-            target.unreadCount++
+            !isInBlacklist && target.unreadCount++
             homeStore.mutate.contactList.splice(homeStore.mutate.contactList.indexOf(target), 1)
             homeStore.mutate.contactList.unshift(target)
           }
