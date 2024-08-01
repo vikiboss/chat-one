@@ -1,4 +1,4 @@
-import { Avatar } from '@/components/avatar'
+import { ChatAvatar } from '@/components/chat-avatar'
 import { Button } from '@arco-design/web-react'
 import { homeStore } from '../store'
 import { useContactList } from './hooks/use-contact-list'
@@ -26,7 +26,7 @@ export function Contact() {
                 }}
               >
                 <span className="w-4">{isInChat ? '-' : '+'}</span>
-                <Avatar size="size-6" item={g} />
+                <ChatAvatar size="size-6" item={g} />
                 <span>{g.name}</span>
               </Button>
             )
@@ -50,7 +50,7 @@ export function Contact() {
                 }}
               >
                 <span className="w-4">{isInChat ? '-' : '+'}</span>
-                <Avatar size="size-6" item={f} />
+                <ChatAvatar size="size-6" item={f} />
                 <span>{f.name}</span>
               </Button>
             )

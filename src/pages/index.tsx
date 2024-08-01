@@ -1,4 +1,4 @@
-import { Avatar } from '@/components/avatar'
+import { ChatAvatar } from '@/components/chat-avatar'
 import { globalStore, useConnected, useOnline, useUserInfo } from '@/store'
 import { useMount } from '@shined/react-use'
 import { Outlet, useNavigate } from 'react-router-dom'
@@ -22,7 +22,11 @@ export function Home() {
   })
 
   if (!isConnected && hasHost) {
-    return <div>WS 连接已断开</div>
+    return (
+      <div className="flex-1 grid-center h-full">
+        <div>WS is disconnected, please check the connection</div>
+      </div>
+    )
   }
 
   return (
@@ -31,7 +35,7 @@ export function Home() {
         <div className="h-5">
           {info ? (
             <div className="flex gap-1 items-center">
-              <Avatar size="size-4" item={{ type: 'private', id: info.user_id }} />
+              <ChatAvatar size="size-4" item={{ type: 'private', id: info.user_id }} />
               <div className="text-xs">
                 {info.nickname ?? '-'} - {info.user_id ?? '-'} - {isOnline ? 'Online' : 'Offline'}
               </div>

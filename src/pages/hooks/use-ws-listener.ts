@@ -1,6 +1,6 @@
 import { globalStore, wsApi } from '@/store'
 import { useEventListener } from '@shined/react-use'
-import { chatListStore } from '../chat-list/store'
+import { chatListStore } from '../chat/store'
 import { homeStore } from '../store'
 import { blackList } from '@/utils/blacklist'
 

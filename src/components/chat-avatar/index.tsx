@@ -13,7 +13,7 @@ interface Props extends ImgHTMLAttributes<HTMLImageElement> {
   imgSize?: 40 | 100 | 160 | 640
 }
 
-export function Avatar(props: Props) {
+export function ChatAvatar(props: Props) {
   const { item, rounded = false, size = 'size-8', imgSize = 100, className, ...imgProps } = props
 
   return item.type === 'group' ? (

@@ -4,11 +4,15 @@ import { homeStore } from '../../store'
 
 import type { OneBot } from '@/hooks/use-onebot-api'
 
+let requestLock = false
+
 export const useContactList = () => {
   const api = useOneBotApi()
 
   useMount(async () => {
-    if (homeStore.mutate.contactList.length) return
+    if (homeStore.mutate.contactList.length || requestLock) return
+
+    requestLock = true
 
     const { data: gList = [] } = await api.action<{ data: OneBot.GroupInfo[] }>('get_group_list')
     const { data: pList = [] } = await api.action<{ data: OneBot.PrivateInfo[] }>('get_friend_list')
@@ -35,6 +39,8 @@ export const useContactList = () => {
         unreadCount: 0,
       })),
     ]
+
+    requestLock = false
   })
 
   return homeStore.useSnapshot(

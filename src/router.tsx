@@ -1,7 +1,6 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom'
 import { Home } from './pages'
-import { ChatList } from './pages/chat-list'
-import { Chat } from './pages/chat-list/chat'
+import { Chat } from './pages/chat'
 import { Connect } from './pages/connect'
 import { Contact } from './pages/contact'
 import { Setting } from './pages/setting'
@@ -18,13 +17,7 @@ export const router = createBrowserRouter(
         },
         {
           path: 'chat',
-          element: <ChatList />,
-          children: [
-            {
-              path: ':type/:id',
-              element: <Chat />,
-            },
-          ],
+          element: <Chat />,
         },
         {
           path: 'contact',
