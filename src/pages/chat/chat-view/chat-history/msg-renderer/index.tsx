@@ -9,19 +9,20 @@ export function MsgRenderer(props: MsgRendererProps) {
   const { messages = [] } = props
   const singleItem = ['mface', 'record', 'video', 'json', 'xml'] as const
 
+  let msgs = structuredClone(messages)
+
   for (const item of singleItem) {
     const single = messages.find((e) => e.type === item)
 
     if (single) {
-      messages.length = 0
-      messages[0] = single
+      msgs = [single]
       break
     }
   }
 
   return (
     <div>
-      {messages.map((e: any, idx) => {
+      {msgs.map((e: any, idx) => {
         switch (e.type) {
           case 'text':
             return <span key={`${e.type}-${idx}`}>{e.data.text}</span>
