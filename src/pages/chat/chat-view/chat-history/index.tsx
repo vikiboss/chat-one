@@ -6,7 +6,7 @@ import { useScroll, useUpdateEffect } from '@shined/react-use'
 import { blackList } from '@/utils/blacklist'
 import { ChatAvatar } from '@/components/chat-avatar'
 import { cn } from '@/utils'
-import { qqFaceList } from '@/utils/qq-face'
+import { qqFaceList } from '@/utils/cqface'
 
 import type { OneBot } from '@/hooks/use-onebot-api'
 
@@ -116,7 +116,7 @@ export function ChatHistory() {
                           <img
                             key={`${e.type}-${idx}`}
                             className="h-5"
-                            src={`/face/s${e.data.id}.${target.format}`}
+                            src={`https://static-face-host.viki.moe/face/gif/s${e.data.id}.${target.format ?? 'gif'}`}
                             alt="face"
                           />
                         ) : (
