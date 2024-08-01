@@ -22,7 +22,7 @@ export function useTab() {
         },
         className: cn(
           'flex items-center gap-1 rounded cursor-pointer px-4 py-1',
-          value === targetTab ? 'bg-lime-8/36' : 'hover:bg-zinc/12',
+          value === targetTab ? 'bg-lime-5/36 dark:bg-lime-8/36' : 'hover:bg-zinc/12 dark:hover:bg-zinc/12',
         ),
       }
     },

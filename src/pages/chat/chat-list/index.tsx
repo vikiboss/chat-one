@@ -42,8 +42,8 @@ export function ChatList() {
             key={item.id + item.type}
             title={item.type === 'group' ? `Group: ${item.name}` : `Private: ${item.name} (${item.info.nickname})`}
             className={cn(
-              'relative cursor-pointer hover:bg-zinc-3/12 w-full flex items-center justify-between gap-2 px-3 py-1 border-0 border-solid border-b-1px border-b-zinc/12 last:border-b-transparent',
-              isActive ? 'bg-zinc-3/12' : 'bg-transparent',
+              'relative cursor-pointer dark:hover:bg-zinc-3/12 hover:bg-white/48 w-full flex items-center justify-between gap-2 px-3 py-1 border-0 border-solid border-b-1px border-b-zinc/12 last:border-b-transparent',
+              isActive ? 'bg-white/48 dark:bg-zinc-3/12' : 'bg-transparent',
             )}
             onClick={() => {
               const target = homeStore.mutate.contactList.find((c) => c.id === item.id && c.type === item.type)
@@ -61,7 +61,7 @@ export function ChatList() {
               <div className="truncate">
                 <div className="text-nowrap truncate">{item.name}</div>
                 {lastMessage && (
-                  <div className="text-nowrap text-gray/60 text-xs truncate">
+                  <div className="text-nowrap text-gray/80 dark:text-gray/60 text-xs truncate">
                     {session?.type === 'group' ? `${lastMsgName}: ${lastMsgText}` : lastMsgText}
                   </div>
                 )}

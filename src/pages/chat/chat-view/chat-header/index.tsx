@@ -7,7 +7,7 @@ export function ChatHeader() {
   const tip = isGroup ? ` (${session.info.member_count}/${session.info.max_member_count})` : ''
 
   return (
-    <div className="flex rounded items-center gap-2 w-full p-2 bg-zinc-1/12">
+    <div className="flex rounded items-center gap-2 w-full p-2 bg-white/48 dark:bg-zinc-3/12">
       <ChatAvatar item={session} />
       <div>
         <span>{session.name}</span>
