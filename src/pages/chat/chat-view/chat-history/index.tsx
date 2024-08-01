@@ -4,9 +4,9 @@ import { useChatSession } from '../hooks/use-chat-session'
 import { useListAnimation } from '@/hooks/use-list-animation'
 import { useScroll, useUpdateEffect } from '@shined/react-use'
 import { blackList } from '@/utils/blacklist'
+import { MsgRenderer } from './msg-renderer'
 import { ChatAvatar } from '@/components/chat-avatar'
 import { cn } from '@/utils'
-import { qqFaceList } from '@/utils/cqface'
 
 import type { OneBot } from '@/hooks/use-onebot-api'
 
@@ -41,16 +41,6 @@ export function ChatHistory() {
           msg.sender.user_id
 
         const isSelf = msg.sender.user_id === info?.user_id
-        const singleItem = ['mface', 'record', 'video', 'json', 'xml'] as const
-
-        for (const item of singleItem) {
-          const single = msg.message.find((e) => e.type === item)
-
-          if (single) {
-            msg.message = [single]
-            break
-          }
-        }
 
         const avatar = !lastMessageIsSameUser ? (
           <ChatAvatar rounded item={{ type: 'private', id: msg.user_id }} />
@@ -60,6 +50,10 @@ export function ChatHistory() {
 
         const card = 'card' in msg.sender ? msg.sender.card : ''
         const name = card ? `${card} (${msg.sender.nickname})` : msg.sender.nickname
+
+        const isNoBorder =
+          msg.message.some((e) => e.type === 'mface') ||
+          (msg.message.length === 1 && ['image', 'record'].some((e) => e === msg.message[0].type))
 
         return (
           <div
@@ -81,81 +75,16 @@ export function ChatHistory() {
               <pre className={cn('text-wrap mb-0 font-sans', !lastMessageIsSameUser ? 'mt-1' : 'mt-0')}>
                 <div
                   className={cn(
-                    'py-2 px-3 rounded-2  transition-all inline-block',
-                    isSelf
-                      ? 'rounded-se-0.5 bg-amber/12 group-hover:bg-amber/12'
-                      : 'rounded-ss-0.5 bg-zinc/6 group-hover:bg-zinc/12',
+                    isNoBorder ? '' : 'py-2 px-3',
+                    'rounded-2  transition-all inline-block',
+                    isNoBorder
+                      ? 'bg-transparent'
+                      : isSelf
+                        ? 'rounded-se-0.5 bg-amber/12 group-hover:bg-amber/12'
+                        : 'rounded-ss-0.5 bg-zinc/6 group-hover:bg-zinc/12',
                   )}
                 >
-                  {msg.message.map((e: any, idx) => {
-                    switch (e.type) {
-                      case 'text':
-                        return <span key={`${e.type}-${idx}`}>{e.data.text}</span>
-
-                      case 'image':
-                        return (
-                          <img key={`${e.type}-${idx}`} className="h-20 rounded" src={e.data.url} alt="chat-image" />
-                        )
-
-                      case 'at':
-                        return (
-                          <div
-                            key={`${e.type}-${idx}`}
-                            className="inline-flex flex-center gap-1 mx-1 bg-blue/20 text-blue-5 px-1 py-0.25 rounded"
-                          >
-                            <span>@</span>
-                            <ChatAvatar size="size-4" item={{ type: 'private', id: e.data.qq }} />
-                          </div>
-                        )
-
-                      case 'face': {
-                        const target = qqFaceList.find((f) => f.id === +e.data.id)
-                        const isNormalFace = !!target
-
-                        return isNormalFace ? (
-                          <img
-                            key={`${e.type}-${idx}`}
-                            className="h-5"
-                            src={`https://static-face-host.viki.moe/face/gif/s${e.data.id}.${target.format ?? 'gif'}`}
-                            alt="face"
-                          />
-                        ) : (
-                          `[超级表情, id: ${e.data.id}]`
-                        )
-                      }
-
-                      case 'json':
-                        return (
-                          <span key={`${e.type}-${idx}`}>
-                            {JSON.parse(e.data.data).prompt || JSON.stringify(e.data)}
-                          </span>
-                        )
-
-                      case 'reply':
-                        return <span key={`${e.type}-${idx}`}>[回复]</span>
-
-                      case 'forward':
-                        return <span key={`${e.type}-${idx}`}>[和并转发]</span>
-
-                      case 'record':
-                        return (
-                          <audio key={`${e.type}-${idx}`} controls autoPlay={false}>
-                            <track kind="captions" />
-                            <source src={e.data.url} type='audio/mp3; codecs="mp3"' />
-                          </audio>
-                        )
-
-                      case 'mface':
-                        return e.data.url ? (
-                          <img key={`${e.type}-${idx}`} className="h-24 rounded" src={e.data.url} alt="m-face-image" />
-                        ) : (
-                          <span key={`${e.type}-${idx}`}>[mface:{e.data.id}]</span>
-                        )
-
-                      default:
-                        return <span key={`${e.type}-${idx}`}>{JSON.stringify(e)}</span>
-                    }
-                  })}
+                  <MsgRenderer messages={msg.message} />
                 </div>
               </pre>
             </div>
