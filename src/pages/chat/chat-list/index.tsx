@@ -62,7 +62,7 @@ export function ChatList() {
                 <div className="text-nowrap truncate">{item.name}</div>
                 {lastMessage && (
                   <div className="text-nowrap text-gray/60 text-xs truncate">
-                    {lastMsgName}: {lastMsgText}
+                    {session?.type === 'group' ? `${lastMsgName}: ${lastMsgText}` : lastMsgText}
                   </div>
                 )}
               </div>
