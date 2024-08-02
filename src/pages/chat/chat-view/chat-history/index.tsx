@@ -72,16 +72,11 @@ export function ChatHistory() {
                   {isSelf && <div className="font-bold">{name}</div>}
                 </div>
               )}
-              <pre
-                className={cn(
-                  'flex-1 text-wrap mb-0 font-sans w-full break-all',
-                  !lastMessageIsSameUser ? 'mt-1' : 'mt-0',
-                )}
-              >
+              <pre className={cn('text-wrap mb-0 font-sans break-all', !lastMessageIsSameUser ? 'mt-1' : 'mt-0')}>
                 <div
                   className={cn(
                     isNoBorder ? '' : 'py-2 px-3',
-                    'rounded-2 transition-all inline-block w-full',
+                    'rounded-2 transition-all inline-block',
                     isNoBorder
                       ? 'bg-transparent'
                       : isSelf

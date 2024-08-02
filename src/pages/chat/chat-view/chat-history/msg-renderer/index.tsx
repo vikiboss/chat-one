@@ -83,7 +83,7 @@ export function MsgRenderer(props: MsgRendererProps) {
               : e.data.url
 
             return (
-              <video autoPlay={false} controls key={`${e.type}-${idx}`} className="h-48 rounded-2 w-full" src={url}>
+              <video autoPlay={false} controls key={`${e.type}-${idx}`} className="h-48 rounded-2 min-w-36" src={url}>
                 <track kind="captions" />
               </video>
             )
