@@ -7,6 +7,7 @@ import { blackList } from '@/utils/blacklist'
 import { MsgRenderer } from './msg-renderer'
 import { ChatAvatar } from '@/components/chat-avatar'
 import { cn } from '@/utils'
+import { useSendMsg } from '../hooks/use-send-msg'
 
 import type { OneBot } from '@/hooks/use-onebot-api'
 
@@ -16,6 +17,8 @@ export function ChatHistory() {
   const session = useChatSession()
   const historyAnimationRef = useListAnimation()
   const scroll = useScroll(() => '#chat-history', { behavior: 'smooth' })
+
+  const { sendMsgFn } = useSendMsg()
 
   useUpdateEffect(() => {
     if (tab.value === 'chat' && (scroll.arrivedState.bottom || !scroll.isScrolling)) {
@@ -48,6 +51,18 @@ export function ChatHistory() {
           <div className="w-8" />
         )
 
+        const echo = (
+          <div
+            onClick={async () => {
+              const targetMsg = structuredClone(msg.message)
+              await sendMsgFn.run(session.type, session.id, [...targetMsg])
+            }}
+            className="group-hover:grid cursor-pointer hidden place-content-center text-[10px] size-5 rounded-full bg-blue-5/20 hover:bg-blue-5/36 text-white mb-1"
+          >
+            +1
+          </div>
+        )
+
         const card = 'card' in msg.sender ? msg.sender.card : ''
         const name = card ? `${card} (${msg.sender.nickname})` : msg.sender.nickname
 
@@ -72,21 +87,25 @@ export function ChatHistory() {
                   {isSelf && <div className="font-bold">{name}</div>}
                 </div>
               )}
-              <pre className={cn('text-wrap mb-0 font-sans break-all', !lastMessageIsSameUser ? 'mt-1' : 'mt-0')}>
-                <div
-                  className={cn(
-                    isNoBorder ? '' : 'py-2 px-3',
-                    'rounded-2 transition-all inline-block',
-                    isNoBorder
-                      ? 'bg-transparent'
-                      : isSelf
-                        ? 'rounded-se-0.5 bg-amber/12 group-hover:bg-amber/12'
-                        : 'rounded-ss-0.5 bg-zinc/6 group-hover:bg-zinc/12',
-                  )}
-                >
-                  <MsgRenderer messages={msg.message} />
-                </div>
-              </pre>
+              <div className="max-w-4/5 flex gap-2 items-end">
+                {isSelf && echo}
+                <pre className={cn('text-wrap mb-0 font-sans break-all', !lastMessageIsSameUser ? 'mt-1' : 'mt-0')}>
+                  <div
+                    className={cn(
+                      isNoBorder ? '' : 'py-2 px-3',
+                      'rounded-2 transition-all inline-block',
+                      isNoBorder
+                        ? 'bg-transparent'
+                        : isSelf
+                          ? 'rounded-se-0.5 bg-amber/12 group-hover:bg-amber/12'
+                          : 'rounded-ss-0.5 bg-zinc/6 group-hover:bg-zinc/12',
+                    )}
+                  >
+                    <MsgRenderer messages={msg.message} />
+                  </div>
+                </pre>
+                {!isSelf && echo}
+              </div>
             </div>
             {isSelf && avatar}
           </div>
