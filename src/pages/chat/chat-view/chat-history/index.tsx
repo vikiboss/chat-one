@@ -62,7 +62,7 @@ export function ChatHistory() {
             className={cn('flex w-full gap-2 p-2 group', !lastMessageIsSameUser ? 'py-2' : 'pt-0')}
           >
             {!isSelf && avatar}
-            <div className={cn('flex flex-col', isSelf ? 'items-end' : '')}>
+            <div className={cn('flex flex-col w-full', isSelf ? 'items-end' : '')}>
               {!lastMessageIsSameUser && (
                 <div className={cn('flex items-center gap-1 text-right')}>
                   {!isSelf && <div className="font-bold">{name}</div>}
