@@ -57,7 +57,7 @@ export function ChatHistory() {
               const targetMsg = structuredClone(msg.message)
               await sendMsgFn.run(session.type, session.id, [...targetMsg])
             }}
-            className="group-hover:grid cursor-pointer hidden place-content-center text-[10px] size-5 rounded-full bg-blue-5/20 hover:bg-blue-5/36 text-white mb-1"
+            className="group-hover:opacity-100 transition-all cursor-pointer opacity-0 grid place-content-center text-[10px] size-5 rounded-full bg-blue-5/20 hover:bg-blue-5/36 text-white mb-1"
           >
             +1
           </div>
@@ -87,9 +87,14 @@ export function ChatHistory() {
                   {isSelf && <div className="font-bold">{name}</div>}
                 </div>
               )}
-              <div className="max-w-4/5 flex gap-2 items-end">
+              <div className="flex gap-2 items-end">
                 {isSelf && echo}
-                <pre className={cn('text-wrap mb-0 font-sans break-all', !lastMessageIsSameUser ? 'mt-1' : 'mt-0')}>
+                <pre
+                  className={cn(
+                    'max-w-4/5 text-wrap mb-0 font-sans break-all',
+                    !lastMessageIsSameUser ? 'mt-1' : 'mt-0',
+                  )}
+                >
                   <div
                     className={cn(
                       isNoBorder ? '' : 'py-2 px-3',
