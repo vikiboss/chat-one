@@ -53,7 +53,7 @@ export function ChatHistory() {
 
         const isNoBorder =
           msg.message.some((e) => e.type === 'mface') ||
-          (msg.message.length === 1 && ['image', 'record'].some((e) => e === msg.message[0].type))
+          (msg.message.length === 1 && ['image', 'video', 'record'].some((e) => e === msg.message[0].type))
 
         return (
           <div
@@ -62,7 +62,7 @@ export function ChatHistory() {
             className={cn('flex w-full gap-2 p-2 group', !lastMessageIsSameUser ? 'py-2' : 'pt-0')}
           >
             {!isSelf && avatar}
-            <div className={cn('flex flex-col w-full', isSelf ? 'items-end' : '')}>
+            <div className={cn('flex flex-col', isSelf ? 'items-end' : '')}>
               {!lastMessageIsSameUser && (
                 <div className={cn('flex items-center gap-1 text-right')}>
                   {!isSelf && <div className="font-bold">{name}</div>}
@@ -72,11 +72,16 @@ export function ChatHistory() {
                   {isSelf && <div className="font-bold">{name}</div>}
                 </div>
               )}
-              <pre className={cn('text-wrap mb-0 font-sans', !lastMessageIsSameUser ? 'mt-1' : 'mt-0')}>
+              <pre
+                className={cn(
+                  'flex-1 text-wrap mb-0 font-sans w-full break-all',
+                  !lastMessageIsSameUser ? 'mt-1' : 'mt-0',
+                )}
+              >
                 <div
                   className={cn(
                     isNoBorder ? '' : 'py-2 px-3',
-                    'rounded-2  transition-all inline-block',
+                    'rounded-2 transition-all inline-block w-full',
                     isNoBorder
                       ? 'bg-transparent'
                       : isSelf

@@ -32,6 +32,7 @@ export function ChatList() {
           (lastMessage?.message.find((e) => e.type === 'mface') ? '[图片表情]' : '') ||
           (lastMessage?.message.find((e) => e.type === 'json') ? '[卡片消息]' : '') ||
           (lastMessage?.message.find((e) => e.type === 'record') ? '[语音消息]' : '') ||
+          (lastMessage?.message.find((e) => e.type === 'video') ? '[视频消息]' : '') ||
           (lastMessage?.message.find((e) => e.type === 'face') ? '[QQ 表情]' : '') ||
           (lastMessage?.message.find((e) => e.type === 'forward') ? '[合并转发]' : '') ||
           lastMessage?.message.find((e) => e.type === 'text')?.data.text ||

@@ -75,10 +75,19 @@ export function MsgRenderer(props: MsgRendererProps) {
             return <span key={`${e.type}-${idx}`}>[合并转发]</span>
 
           case 'record':
-            return `[语音消息, url=${e.data.url}]`
+            return `[语音消息] ${e.data.url}`
 
-          case 'video':
-            return `[视频消息, url=${e.data.url}]`
+          case 'video': {
+            const url = e.data.url.startsWith('base64://')
+              ? e.data.url.replace('base64://', 'data:video/mp4;base64,')
+              : e.data.url
+
+            return (
+              <video autoPlay={false} controls key={`${e.type}-${idx}`} className="h-48 rounded-2 w-full" src={url}>
+                <track kind="captions" />
+              </video>
+            )
+          }
 
           case 'mface':
             return e.data.url ? (
