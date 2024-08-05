@@ -1,5 +1,5 @@
 import { useEventBus } from '@shined/react-use'
-import { Toaster } from 'react-hot-toast'
+import { toast, Toaster } from 'react-hot-toast'
 import { RouterProvider } from 'react-router-dom'
 import { useAutoDarkMode } from './hooks/use-dark-mode'
 import { useOneBotApi } from './hooks/use-onebot-api'
@@ -17,6 +17,7 @@ export function App() {
     onClose() {
       console.log('[ws closed]')
       globalStore.mutate.isConnected = false
+      toast.error('WS connection closed')
     },
     async onOpen() {
       console.log('[ws opened]')
@@ -36,6 +37,7 @@ export function App() {
     },
     onError(error) {
       console.error('[ws error]', error)
+      toast.error('WS connection error')
     },
   })
 

@@ -87,7 +87,7 @@ export function ChatHistory() {
                   {isSelf && <div className="font-bold">{name}</div>}
                 </div>
               )}
-              <div className="flex gap-2 items-end">
+              <div className={cn('flex gap-2 items-end w-full', isSelf ? 'justify-end' : '')}>
                 {isSelf && echo}
                 <pre
                   className={cn(
