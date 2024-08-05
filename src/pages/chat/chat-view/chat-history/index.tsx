@@ -97,13 +97,14 @@ export function ChatHistory() {
                 >
                   <div
                     className={cn(
-                      isNoBorder ? '' : 'py-2 px-3',
                       'rounded-2 transition-all inline-block',
+                      isSelf ? 'rounded-se-0.5' : 'rounded-ss-0.5',
+                      isNoBorder ? '' : 'py-2 px-3',
                       isNoBorder
                         ? 'bg-transparent'
                         : isSelf
-                          ? 'rounded-se-0.5 bg-amber/12 group-hover:bg-amber/12'
-                          : 'rounded-ss-0.5 bg-zinc/6 group-hover:bg-zinc/12',
+                          ? 'bg-amber/12 group-hover:bg-amber/18'
+                          : 'bg-zinc/6 group-hover:bg-zinc/12',
                     )}
                   >
                     <MsgRenderer messages={msg.message} />
