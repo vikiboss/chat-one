@@ -45,7 +45,7 @@ export const useContactList = () => {
           unreadCount: friend?.unreadCount ?? 0,
         }
       }),
-    ]
+    ].sort((a, b) => b.unreadCount - a.unreadCount)
 
     lock = false
   }
