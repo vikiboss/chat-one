@@ -76,7 +76,13 @@ export function MsgRenderer(props: MsgRendererProps) {
             return <span key={`${e.type}-${idx}`}>{JSON.parse(e.data.data).prompt || JSON.stringify(e.data)}</span>
 
           case 'reply':
-            return <span key={`${e.type}-${idx}`}>[回复消息]</span>
+            return (
+              <div className="inline-flex items-center" key={`${e.type}-${idx}`}>
+                <span>[回复</span>
+                <MsgRenderer messages={[{ type: 'at', data: { qq: e.data.__user_id__ } }]} />
+                <span>]</span>
+              </div>
+            )
 
           case 'forward':
             return <span key={`${e.type}-${idx}`}>[合并转发]</span>

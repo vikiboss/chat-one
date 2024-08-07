@@ -29,6 +29,17 @@ export function useWsListener() {
             homeStore.mutate.contactList.unshift(target)
           }
 
+          const idx = msg.message.findIndex((e: any) => e.type === 'reply')
+
+          if (idx !== -1 && msg.message.length > idx + 1) {
+            const atItem = msg.message[idx + 1]
+
+            if (atItem.type === 'at') {
+              msg.message.splice(idx + 1, 1)
+              msg.message[idx].data.__user_id__ = atItem.data.qq
+            }
+          }
+
           target.history.push(msg)
         }
 
