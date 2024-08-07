@@ -33,7 +33,7 @@ export function Home() {
 
   if (!isConnected && hasHost) {
     return (
-      <div className="flex-1 grid-center h-full">
+      <div className="size-screen grid place-content-center">
         <div>WS is disconnected, please check the connection</div>
       </div>
     )
