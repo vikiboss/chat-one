@@ -69,7 +69,7 @@ export function ChatHistory() {
             }}
             className="group-hover:opacity-100 transition-all cursor-pointer opacity-0 grid place-content-center text-[10px] size-5 rounded-full bg-blue-5/20 hover:bg-blue-5/36 text-white mb-1"
           >
-            +1
+            <span className={cn(sendMsgFn.loading ? 'i-mdi-loading animate-spin' : 'i-mdi-plus')} />
           </div>
         )
 
