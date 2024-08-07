@@ -42,7 +42,7 @@ export function Home() {
   return (
     <div className="relative">
       <div className="size-screen grid-center">
-        <div className="z-10 rounded p-2 h-[calc(100vh-200px)] w-[calc((100vh-200px)/0.618)] bg-stone/12 flex flex-col gap-2">
+        <div className="z-10 rounded p-2 h-[calc(100vh-6rem)] w-[calc((100vh-6rem)/0.618)] bg-stone/12 flex flex-col gap-2">
           <div className="h-5">
             {info ? (
               <div className="flex gap-1 items-center">
@@ -55,7 +55,7 @@ export function Home() {
               'Loading...'
             )}
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 h-[calc(100%-1.75rem)]">
             <aside className="flex flex-col gap-1 rounded">
               <div {...tab.props('chat')}>
                 <span className="i-mdi-chat" />
@@ -70,7 +70,7 @@ export function Home() {
                 Setting
               </div>
             </aside>
-            <main className="h-[calc(100vh-260px)] w-full overflow-scroll bg-zinc-1/6 rounded p-2">
+            <main className="h-full w-full overflow-scroll rounded">
               <Outlet />
             </main>
           </div>

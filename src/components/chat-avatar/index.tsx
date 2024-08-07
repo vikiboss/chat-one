@@ -11,23 +11,27 @@ interface Props extends ImgHTMLAttributes<HTMLImageElement> {
   rounded?: boolean
   size?: string
   imgSize?: 40 | 100 | 160 | 640
+  onClick?: (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => void
 }
 
 export function ChatAvatar(props: Props) {
-  const { item, rounded = false, size = 'size-8', imgSize = 100, className, ...imgProps } = props
+  const { item, onClick, rounded = false, size = 'size-8', imgSize = 100, className, ...imgProps } = props
 
-  return item.type === 'group' ? (
+  const url =
+    item.type === 'group'
+      ? `https://p.qlogo.cn/gh/${item.id}/${item.id}/${imgSize}`
+      : `https://q.qlogo.cn/headimg_dl?dst_uin=${item.id}&spec=${imgSize}`
+
+  return (
     <img
-      className={cn(size, rounded ? 'rounded-full' : 'rounded', className)}
-      src={`https://p.qlogo.cn/gh/${item.id}/${item.id}/${imgSize}`}
-      {...imgProps}
-      title={item.id.toString()}
-      alt="avatar"
-    />
-  ) : (
-    <img
-      className={cn(size, rounded ? 'rounded-full' : 'rounded', className)}
-      src={`https://q.qlogo.cn/headimg_dl?dst_uin=${item.id}&spec=${imgSize}`}
+      onClick={onClick}
+      className={cn(
+        size,
+        rounded ? 'rounded-full' : 'rounded',
+        onClick ? 'cursor-pointer hover:opacity-60 transition-all' : '',
+        className,
+      )}
+      src={url}
       {...imgProps}
       title={item.id.toString()}
       alt="avatar"

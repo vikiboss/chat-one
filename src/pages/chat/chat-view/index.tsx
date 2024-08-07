@@ -9,7 +9,7 @@ export function ChatView() {
   return (
     <div className="flex-1 overflow-hidden">
       {session ? (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 h-full">
           <ChatHeader />
           <ChatHistory />
           <MsgInput />

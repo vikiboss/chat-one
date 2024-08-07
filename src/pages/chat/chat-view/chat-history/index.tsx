@@ -2,7 +2,7 @@ import { useTab } from '@/pages/hooks/use-tab'
 import { useUserInfo } from '@/store'
 import { useChatSession } from '../hooks/use-chat-session'
 import { useListAnimation } from '@/hooks/use-list-animation'
-import { useScroll, useUpdateEffect } from '@shined/react-use'
+import { useClipboard, useScroll, useUpdateEffect } from '@shined/react-use'
 import { blackList } from '@/utils/blacklist'
 import { MsgRenderer } from './msg-renderer'
 import { ChatAvatar } from '@/components/chat-avatar'
@@ -10,6 +10,7 @@ import { cn } from '@/utils'
 import { useSendMsg } from '../hooks/use-send-msg'
 
 import type { OneBot } from '@/hooks/use-onebot-api'
+import toast from 'react-hot-toast'
 
 export function ChatHistory() {
   const tab = useTab()
@@ -32,8 +33,10 @@ export function ChatHistory() {
     }
   }, [session.id, session.type, tab.value])
 
+  const clipboard = useClipboard()
+
   return (
-    <div id="chat-history" ref={historyAnimationRef} className="w-full h-[calc(100vh-400px)] overflow-scroll">
+    <div id="chat-history" ref={historyAnimationRef} className="flex-1 w-full overflow-scroll">
       {(
         session.history.filter((e) => blackList.some((id) => id !== e.user_id)).slice(-100) as
           | OneBot.GroupMessage[]
@@ -46,12 +49,19 @@ export function ChatHistory() {
         const isSelf = msg.sender.user_id === info?.user_id
 
         const avatar = !lastMessageIsSameUser ? (
-          <ChatAvatar rounded item={{ type: 'private', id: msg.user_id }} />
+          <ChatAvatar
+            onClick={() => {
+              clipboard.copy(msg.sender.user_id.toString())
+              toast.success('Uin copied to clipboard')
+            }}
+            rounded
+            item={{ type: 'private', id: msg.user_id }}
+          />
         ) : (
           <div className="w-8" />
         )
 
-        const echo = (
+        const echoBtn = (
           <div
             onClick={async () => {
               const targetMsg = structuredClone(msg.message)
@@ -88,7 +98,7 @@ export function ChatHistory() {
                 </div>
               )}
               <div className={cn('flex gap-2 items-end w-full', isSelf ? 'justify-end' : '')}>
-                {isSelf && echo}
+                {isSelf && echoBtn}
                 <pre
                   className={cn(
                     'max-w-4/5 text-wrap mb-0 font-sans break-all',
@@ -110,7 +120,7 @@ export function ChatHistory() {
                     <MsgRenderer messages={msg.message} />
                   </div>
                 </pre>
-                {!isSelf && echo}
+                {!isSelf && echoBtn}
               </div>
             </div>
             {isSelf && avatar}
