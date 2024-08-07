@@ -20,7 +20,17 @@ export type ContactItem = {
     }
 )
 
-export const homeStore = create({
-  tab: (location.pathname.replace('/', '') || 'chat') as 'chat' | 'contact' | 'setting',
-  contactList: [] as ContactItem[],
-})
+const cache = localStorage.getItem('homeStore')
+const initialStore = cache ? JSON.parse(cache ?? '') : undefined
+
+export interface HomeStore {
+  tab: 'chat' | 'contact' | 'setting'
+  contactList: ContactItem[]
+}
+
+export const homeStore = create<HomeStore>(
+  initialStore || {
+    tab: (location.pathname.replace('/', '') || 'chat') as 'chat' | 'contact' | 'setting',
+    contactList: [] as ContactItem[],
+  },
+)

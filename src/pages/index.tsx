@@ -1,9 +1,10 @@
 import { ChatAvatar } from '@/components/chat-avatar'
 import { globalStore, useConnected, useOnline, useUserInfo } from '@/store'
-import { useMount } from '@shined/react-use'
+import { useEffectOnce, useMount, useThrottledFn } from '@shined/react-use'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useTab } from './hooks/use-tab'
 import { useWsListener } from './hooks/use-ws-listener'
+import { homeStore } from './store'
 
 export function Home() {
   useWsListener()
@@ -20,6 +21,15 @@ export function Home() {
       navigate('/connect')
     }
   })
+
+  const throttledSaveCache = useThrottledFn(
+    (snapshot: any) => {
+      localStorage.setItem('homeStore', JSON.stringify(snapshot))
+    },
+    { wait: 3_000 },
+  )
+
+  useEffectOnce(() => homeStore.subscribe((changes) => throttledSaveCache(changes.snapshot)))
 
   if (!isConnected && hasHost) {
     return (

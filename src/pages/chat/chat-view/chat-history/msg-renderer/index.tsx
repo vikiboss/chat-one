@@ -31,7 +31,14 @@ export function MsgRenderer(props: MsgRendererProps) {
             const url = e.data.file?.startsWith('base64://')
               ? e.data.file.replace('base64://', 'data:image/png; base64,')
               : e.data.url
-            return <img key={`${e.type}-${idx}`} className="h-20 rounded-6px" src={url} alt="chat-image" />
+            return (
+              <img
+                key={`${e.type}-${idx}`}
+                className="max-h-120 max-w-120 min-w-8 min-h-8 h-20 rounded-6px"
+                src={url}
+                alt="chat-image"
+              />
+            )
           }
 
           case 'at':

@@ -2,6 +2,7 @@ import { useOneBotApi, type OneBot } from '@/hooks/use-onebot-api'
 import { homeStore } from '@/pages/store'
 import { useUserInfo } from '@/store'
 import { useAsyncFn } from '@shined/react-use'
+import { toast } from 'react-hot-toast'
 
 export function useSendMsg() {
   const info = useUserInfo()
@@ -44,6 +45,10 @@ export function useSendMsg() {
           sub_type: 'normal',
         })
       }
+
+      if (!data.message_id) {
+        toast.error('Failed to send message')
+      }
     } else {
       const { data } = await api.action<{ data: { message_id: number } }>('send_private_msg', {
         user_id: id,
@@ -58,6 +63,10 @@ export function useSendMsg() {
           message_type: 'private',
           sub_type: 'friend',
         })
+      }
+
+      if (!data.message_id) {
+        toast.error('Failed to send message')
       }
     }
 
