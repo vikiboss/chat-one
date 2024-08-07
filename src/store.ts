@@ -3,8 +3,8 @@ import localforage from 'localforage'
 
 export const globalStore = create({
   ws: {
-    host: (await localforage.getItem('ws_host')) || '',
-    accessToken: (await localforage.getItem('ws_access_token')) || '',
+    host: ((await localforage.getItem('ws_host')) as string) || '',
+    accessToken: ((await localforage.getItem('ws_access_token')) as string) || '',
     ref: ref({
       instance: undefined as WebSocket | undefined,
     }),
