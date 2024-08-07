@@ -68,7 +68,10 @@ export function ChatHistory() {
                 const targetMsg = structuredClone(msg.message)
                 await sendMsgFn.run(session.type, session.id, [...targetMsg])
               }}
-              className="group-hover:opacity-100 transition-all cursor-pointer opacity-0 grid place-content-center text-[10px] size-5 rounded-full bg-blue-5/20 hover:bg-blue-5/36 text-white mb-1"
+              className={cn(
+                'transition-all cursor-pointer grid place-content-center text-[10px] size-5 rounded-full bg-blue-5/20 hover:bg-blue-5/36 text-white mb-1',
+                sendMsgFn.loading ? 'cursor-not-allowed opacity-60' : 'group-hover:opacity-100 opacity-0',
+              )}
             >
               <span className={cn(sendMsgFn.loading ? 'i-mdi-loading animate-spin' : 'i-mdi-plus')} />
             </div>
