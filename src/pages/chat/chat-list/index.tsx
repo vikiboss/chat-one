@@ -7,6 +7,7 @@ import { ChatAvatar } from '@/components/chat-avatar'
 import { useChatList } from './hooks/use-chat-list'
 import { useStoreSession } from '../hooks/use-store-session'
 import { isTargetChat } from '../chat-view/hooks/use-chat-session'
+import { useTimeAgo } from '@shined/react-use'
 
 export function ChatList() {
   const chatList = useChatList()
@@ -35,6 +36,11 @@ export function ChatList() {
           lastMessage?.message.find((e) => e.type === 'text')?.data.text ||
           '[No Message]'
 
+        function LastMsgTime() {
+          if (!lastMessage) return null
+          return <div className="text-xs text-gray/60">{useTimeAgo(new Date(lastMessage.time * 1000))}</div>
+        }
+
         return (
           <div
             key={item.id + item.type}
@@ -57,13 +63,16 @@ export function ChatList() {
                 chatListStore.mutate.session = { id: item.id, type: item.type }
               }}
             >
-              <div className="flex gap-2 items-center truncate">
+              <div className="flex gap-2 items-center truncate w-full">
                 <ChatAvatar item={item} />
-                <div className="truncate">
+                <div className="truncate w-full">
                   <div className="text-nowrap truncate">{item.name}</div>
                   {lastMessage && (
-                    <div className="text-nowrap text-gray/80 dark:text-gray/60 text-xs truncate">
-                      {item?.type === 'group' ? `${lastMsgName}: ${lastMsgText}` : lastMsgText}
+                    <div className="flex items-center justify-between gap-1 truncate w-full">
+                      <div className="text-nowrap text-gray/80 dark:text-gray/60 text-xs truncate">
+                        {item?.type === 'group' ? `${lastMsgName}: ${lastMsgText}` : lastMsgText}
+                      </div>
+                      <LastMsgTime />
                     </div>
                   )}
                 </div>
