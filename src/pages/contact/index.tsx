@@ -1,18 +1,31 @@
 import { ChatAvatar } from '@/components/chat-avatar'
-import { Button } from '@arco-design/web-react'
+import { Button, Input } from '@arco-design/web-react'
 import { homeStore } from '../store'
 import { useContactList } from './hooks/use-contact-list'
+import { useControlledComponent } from '@shined/react-use'
 
 export function Contact() {
   const [friends, groups, list] = useContactList()
   const chatList = list.filter((c) => c.chatting || c.unreadCount > 0)
 
+  const filterInput = useControlledComponent('')
+
+  const filteredGroup = groups.filter(
+    (g) => g.name.includes(filterInput.value) || g.id.toString().includes(filterInput.value),
+  )
+
+  const filteredFriend = friends.filter(
+    (f) => f.name.includes(filterInput.value) || f.id.toString().includes(filterInput.value),
+  )
+
   return (
     <div>
       <div>
+        <h2 className="my-2">Filter Zone</h2>
+        <Input {...filterInput.props} placeholder="input nickname or uin to filter" />
         <h2 className="my-2">Groups</h2>
         <div className="flex flex-col gap-1">
-          {groups.map((g) => {
+          {filteredGroup.map((g) => {
             const isInChat = chatList.find((e) => e.type === 'group' && e.id === g.id)
             return (
               <Button
@@ -31,12 +44,13 @@ export function Contact() {
               </Button>
             )
           })}
+          {filteredGroup.length === 0 && <span>No group found</span>}
         </div>
       </div>
       <div>
         <h2 className="my-2">Friends</h2>
         <div className="flex flex-col gap-1">
-          {friends.map((f) => {
+          {filteredFriend.map((f) => {
             const isInChat = chatList.find((e) => e.type === 'private' && e.id === f.id)
             return (
               <Button
@@ -55,6 +69,7 @@ export function Contact() {
               </Button>
             )
           })}
+          {filteredFriend.length === 0 && <span>No friend found</span>}
         </div>
       </div>
     </div>
