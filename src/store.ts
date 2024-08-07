@@ -1,9 +1,10 @@
 import { create, ref } from '@shined/reactive'
+import localforage from 'localforage'
 
 export const globalStore = create({
   ws: {
-    host: localStorage.getItem('ws_host') || '',
-    accessToken: localStorage.getItem('ws_access_token') || '',
+    host: (await localforage.getItem('ws_host')) || '',
+    accessToken: (await localforage.getItem('ws_access_token')) || '',
     ref: ref({
       instance: undefined as WebSocket | undefined,
     }),
@@ -15,11 +16,11 @@ export const globalStore = create({
 
 globalStore.subscribe((changes) => {
   if (changes.propsPath === 'ws.host') {
-    localStorage.setItem('ws_host', changes.snapshot.ws.host)
+    localforage.setItem('ws_host', changes.snapshot.ws.host)
   }
 
   if (changes.propsPath === 'ws.accessToken') {
-    localStorage.setItem('ws_access_token', changes.snapshot.ws.accessToken)
+    localforage.setItem('ws_access_token', changes.snapshot.ws.accessToken)
   }
 })
 
