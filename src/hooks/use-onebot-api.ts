@@ -6,13 +6,13 @@ export const useOneBotApi = () => {
   const bus = useEventBus(Symbol.for('api_ret'))
   const actions = useCreation(() => new Set())
 
-  function genRetPromise<Data>(timeout = 6000) {
+  function genRetPromise<Data>(timeout = 12_000) {
     const actionId = uuid()
     actions.add(actionId)
 
     return {
       retPromise: new Promise<Data>((resolve, reject) => {
-        const timer = setTimeout(() => reject(new Error('timeout')), timeout)
+        const timer = setTimeout(() => reject(new Error('OneBot WS API Timeout')), timeout)
 
         bus.on((event, data: Data) => {
           if (event === `action:${actionId}`) {
