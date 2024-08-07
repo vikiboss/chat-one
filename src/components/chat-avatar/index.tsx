@@ -33,7 +33,7 @@ export function ChatAvatar(props: Props) {
       )}
       src={url}
       {...imgProps}
-      title={item.id.toString()}
+      title={item.id?.toString()}
       alt="avatar"
     />
   )
