@@ -19,8 +19,6 @@ export function ChatHistory() {
   const historyAnimationRef = useListAnimation()
   const scroll = useScroll(() => '#chat-history', { behavior: 'smooth' })
 
-  const { sendMsgFn } = useSendMsg()
-
   useUpdateEffect(() => {
     if (tab.value === 'chat' && (scroll.arrivedState.bottom || !scroll.isScrolling)) {
       scroll.scrollToEnd('y')
@@ -61,17 +59,21 @@ export function ChatHistory() {
           <div className="w-8" />
         )
 
-        const echoBtn = (
-          <div
-            onClick={async () => {
-              const targetMsg = structuredClone(msg.message)
-              await sendMsgFn.run(session.type, session.id, [...targetMsg])
-            }}
-            className="group-hover:opacity-100 transition-all cursor-pointer opacity-0 grid place-content-center text-[10px] size-5 rounded-full bg-blue-5/20 hover:bg-blue-5/36 text-white mb-1"
-          >
-            <span className={cn(sendMsgFn.loading ? 'i-mdi-loading animate-spin' : 'i-mdi-plus')} />
-          </div>
-        )
+        function EchoBtn() {
+          const { sendMsgFn } = useSendMsg()
+
+          return (
+            <div
+              onClick={async () => {
+                const targetMsg = structuredClone(msg.message)
+                await sendMsgFn.run(session.type, session.id, [...targetMsg])
+              }}
+              className="group-hover:opacity-100 transition-all cursor-pointer opacity-0 grid place-content-center text-[10px] size-5 rounded-full bg-blue-5/20 hover:bg-blue-5/36 text-white mb-1"
+            >
+              <span className={cn(sendMsgFn.loading ? 'i-mdi-loading animate-spin' : 'i-mdi-plus')} />
+            </div>
+          )
+        }
 
         const card = 'card' in msg.sender ? msg.sender.card : ''
         const name = card ? `${card} (${msg.sender.nickname})` : msg.sender.nickname
@@ -98,7 +100,7 @@ export function ChatHistory() {
                 </div>
               )}
               <div className={cn('flex gap-2 items-end w-full', isSelf ? 'justify-end' : '')}>
-                {isSelf && echoBtn}
+                {isSelf && <EchoBtn />}
                 <pre
                   className={cn(
                     'max-w-4/5 text-wrap mb-0 font-sans break-all',
@@ -120,7 +122,7 @@ export function ChatHistory() {
                     <MsgRenderer messages={msg.message} />
                   </div>
                 </pre>
-                {!isSelf && echoBtn}
+                {!isSelf && <EchoBtn />}
               </div>
             </div>
             {isSelf && avatar}
