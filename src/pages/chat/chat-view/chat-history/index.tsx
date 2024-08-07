@@ -38,7 +38,7 @@ export function ChatHistory() {
   return (
     <div id="chat-history" ref={historyAnimationRef} className="flex-1 w-full overflow-scroll">
       {(
-        session.history.filter((e) => blackList.some((id) => id !== e.user_id)).slice(-100) as
+        session.history.filter((e) => blackList.some((id) => id !== e.user_id)).slice(-160) as
           | OneBot.GroupMessage[]
           | OneBot.PrivateMessage[]
       ).map((msg) => {

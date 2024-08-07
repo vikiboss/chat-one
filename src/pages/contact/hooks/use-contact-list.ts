@@ -27,7 +27,7 @@ export const useContactList = () => {
             name: e.group_name,
             type: 'group' as const,
             info: e,
-            history: (group?.history ?? []) as OneBot.GroupMessage[],
+            history: (group?.history ?? []).slice(-600) as OneBot.GroupMessage[],
             chatting: group?.chatting ?? false,
             unreadCount: group?.unreadCount ?? 0,
           }
@@ -40,7 +40,7 @@ export const useContactList = () => {
           name: e.nickname,
           type: 'private' as const,
           info: e,
-          history: (friend?.history ?? []) as OneBot.PrivateMessage[],
+          history: (friend?.history ?? []).slice(-600) as OneBot.PrivateMessage[],
           chatting: friend?.chatting ?? false,
           unreadCount: friend?.unreadCount ?? 0,
         }
