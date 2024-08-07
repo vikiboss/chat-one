@@ -45,7 +45,16 @@ export const useContactList = () => {
           unreadCount: friend?.unreadCount ?? 0,
         }
       }),
-    ].sort((a, b) => b.unreadCount - a.unreadCount)
+    ].sort((a, b) => {
+      if (a.history.length && b.history.length) {
+        return b.history.slice(-1)[0].time - a.history.slice(-1)[0].time
+      }
+
+      if (a.history.length) return -1
+      if (b.history.length) return 1
+
+      return a.unreadCount - b.unreadCount || a.name.localeCompare(b.name)
+    })
 
     lock = false
   }
