@@ -5,6 +5,7 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import { useTab } from './hooks/use-tab'
 import { useWsListener } from './hooks/use-ws-listener'
 import { homeStore } from './store'
+import localforage from 'localforage'
 
 export function Home() {
   useWsListener()
@@ -24,7 +25,7 @@ export function Home() {
 
   const throttledSaveCache = useThrottledFn(
     (snapshot: any) => {
-      localStorage.setItem('homeStore', JSON.stringify(snapshot))
+      localforage.setItem('homeStore', JSON.stringify(snapshot))
     },
     { wait: 3_000 },
   )

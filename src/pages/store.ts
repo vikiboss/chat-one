@@ -1,4 +1,5 @@
 import { create } from '@shined/reactive'
+import localforage from 'localforage'
 
 import type { OneBot } from '@/hooks/use-onebot-api'
 
@@ -20,8 +21,8 @@ export type ContactItem = {
     }
 )
 
-const cache = localStorage.getItem('homeStore')
-const initialStore = cache ? JSON.parse(cache ?? '') : undefined
+const cache = ((await localforage.getItem('homeStore')) ?? '') as string
+const initialStore = cache ? JSON.parse(cache) : undefined
 
 export interface HomeStore {
   tab: 'chat' | 'contact' | 'setting'
