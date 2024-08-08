@@ -30,7 +30,7 @@ export function MsgRenderer(props: MsgRendererProps) {
           case 'image': {
             const url = e.data.file?.startsWith('base64://')
               ? e.data.file.replace('base64://', 'data:image/png; base64,')
-              : e.data.url
+              : e.data.url?.replace('http:', 'https:')
             return (
               <img
                 key={`${e.type}-${idx}`}
