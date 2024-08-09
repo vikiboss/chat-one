@@ -1,10 +1,16 @@
 import { wsApi } from '@/store'
 import { uuid } from '@/utils/uuid'
-import { useCreation, useEventBus } from '@shined/react-use'
+import { useEventBus } from '@shined/react-use'
+
+const actions = new Set()
 
 export const useOneBotApi = () => {
   const bus = useEventBus(Symbol.for('api_ret'))
-  const actions = useCreation(() => new Set())
+
+  function deleteAction(actionId: string) {
+    actions.delete(actionId)
+    if (actions.size === 0) bus.cleanup()
+  }
 
   function genRetPromise<Data>(timeout = 12_000) {
     const actionId = uuid()
@@ -12,13 +18,14 @@ export const useOneBotApi = () => {
 
     return {
       retPromise: new Promise<Data>((resolve, reject) => {
-        const timer = setTimeout(() => reject(new Error('OneBot WS API Timeout')), timeout)
+        const timer = setTimeout(() => {
+          deleteAction(actionId)
+          reject(new Error('OneBot WS API Timeout'))
+        }, timeout)
 
         bus.on((event, data: Data) => {
           if (event === `action:${actionId}`) {
-            actions.delete(actionId)
-            if (actions.size === 0) bus.cleanup()
-
+            deleteAction(actionId)
             clearTimeout(timer)
             resolve(data)
           }
