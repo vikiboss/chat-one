@@ -20,7 +20,7 @@ export function ChatHistory() {
   const scroll = useScroll(() => '#chat-history', { behavior: 'smooth' })
 
   useUpdateEffect(() => {
-    if (tab.value === 'chat' && (scroll.arrivedState.bottom || !scroll.isScrolling)) {
+    if (tab.value === 'chat' && scroll.arrivedState.bottom) {
       scroll.scrollToEnd('y')
     }
   }, [session.history, tab.value])
