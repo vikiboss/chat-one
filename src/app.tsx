@@ -7,11 +7,13 @@ import { useWebsocket } from './hooks/use-websocket'
 import { router } from './router'
 import { globalStore, useWsUrl } from './store'
 
+export const busSymbol = Symbol('api_ret')
+
 export function App() {
   useAutoDarkMode()
 
   const api = useOneBotApi()
-  const bus = useEventBus(Symbol.for('api_ret'))
+  const bus = useEventBus(busSymbol)
 
   const wsRef = useWebsocket(useWsUrl(), {
     onClose() {

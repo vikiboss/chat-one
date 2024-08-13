@@ -1,11 +1,12 @@
 import { wsApi } from '@/store'
 import { uuid } from '@/utils/uuid'
+import { busSymbol } from '@/app'
 import { useEventBus } from '@shined/react-use'
 
 const actions = new Set()
 
 export const useOneBotApi = () => {
-  const bus = useEventBus(Symbol.for('api_ret'))
+  const bus = useEventBus(busSymbol)
 
   function deleteAction(actionId: string) {
     actions.delete(actionId)
@@ -23,10 +24,11 @@ export const useOneBotApi = () => {
           reject(new Error('OneBot WS API Timeout'))
         }, timeout)
 
-        bus.on((event, data: Data) => {
+        const off = bus.on((event, data: Data) => {
           if (event === `action:${actionId}`) {
             deleteAction(actionId)
             clearTimeout(timer)
+            off()
             resolve(data)
           }
         })
