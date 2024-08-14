@@ -36,7 +36,6 @@ export function MsgRenderer(props: MsgRendererProps) {
               url = url.replace('multimedia.nt.qq.com.cn', 'c2cpicdw.qpic.cn')
               url = url.replace('&spec=0', '')
               url += '&spec=0'
-              e.data.replaced = true
             }
 
             return (
