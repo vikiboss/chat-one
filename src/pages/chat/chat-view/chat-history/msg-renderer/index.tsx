@@ -30,7 +30,8 @@ export function MsgRenderer(props: MsgRendererProps) {
           case 'image': {
             const url = e.data.file?.startsWith('base64://')
               ? e.data.file.replace('base64://', 'data:image/png; base64,')
-              : e.data.url?.replace('http:', 'https:')
+              : e.data.url?.replace('http:', 'https:').replace('multimedia.nt.qq.com.cn', 'c2cpicdw.qpic.cn')
+
             return (
               <img
                 key={`${e.type}-${idx}`}
