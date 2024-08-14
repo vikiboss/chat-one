@@ -28,16 +28,22 @@ export function MsgRenderer(props: MsgRendererProps) {
             return <span key={`${e.type}-${idx}`}>{e.data.text}</span>
 
           case 'image': {
-            const url = e.data.file?.startsWith('base64://')
+            let url: string = e.data.file?.startsWith('base64://')
               ? e.data.file.replace('base64://', 'data:image/png; base64,')
-              : e.data.url?.replace('http:', 'https:')
+              : e.data.url?.replace('http:', 'https:') ?? ''
+
+            if (url.includes('multimedia')) {
+              url = url.replace('multimedia.nt.qq.com.cn', 'c2cpicdw.qpic.cn')
+              url = url.replace('&spec=0', '')
+              url += '&spec=0'
+            }
 
             return (
               <img
                 key={`${e.type}-${idx}`}
                 className="max-h-120 max-w-120 min-w-8 min-h-8 h-20 rounded-6px"
                 src={url}
-                alt="chat-image"
+                alt="Expired"
               />
             )
           }
