@@ -66,6 +66,11 @@ export function ChatHistory() {
             <div
               onClick={async () => {
                 const targetMsg = structuredClone(msg.message)
+                for (const message of targetMsg) {
+                  if (message.type === 'image' && message.data.replaced) {
+                    message.data.url = message.data.url.replace('c2cpicdw.qpic.cn', 'multimedia.nt.qq.com.cn')
+                  }
+                }
                 await sendMsgFn.run(session.type, session.id, [...targetMsg])
               }}
               className={cn(
