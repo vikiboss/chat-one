@@ -2,7 +2,7 @@ import { useTab } from '@/pages/hooks/use-tab'
 import { useUserInfo } from '@/store'
 import { useChatSession } from '../hooks/use-chat-session'
 import { useListAnimation } from '@/hooks/use-list-animation'
-import { useClipboard, useScroll, useUpdateEffect } from '@shined/react-use'
+import { useClipboard, useMount, useScroll, useUpdateEffect } from '@shined/react-use'
 import { blackList } from '@/utils/blacklist'
 import { MsgRenderer } from './msg-renderer'
 import { ChatAvatar } from '@/components/chat-avatar'
@@ -17,7 +17,7 @@ export function ChatHistory() {
   const info = useUserInfo()
   const session = useChatSession()
   const historyAnimationRef = useListAnimation()
-  const scroll = useScroll(() => '#chat-history', { behavior: 'smooth' })
+  const scroll = useScroll(() => '#chat-history')
 
   useUpdateEffect(() => {
     if (tab.value === 'chat' && scroll.arrivedState.bottom) {
@@ -30,6 +30,10 @@ export function ChatHistory() {
       scroll.scrollToEnd('y')
     }
   }, [session.id, session.type, tab.value])
+
+  useMount(() => {
+    scroll.scrollToEnd('y')
+  })
 
   const clipboard = useClipboard()
 
@@ -65,13 +69,15 @@ export function ChatHistory() {
           return (
             <div
               onClick={async () => {
+                if (sendMsgFn.loading) return
+
                 const targetMsg = structuredClone(msg.message)
 
                 for (const item of targetMsg) {
                   if (item.type === 'image') {
                     item.data.url = item.data.url?.replace('http:', 'https:') ?? ''
 
-                    if (item.data.url?.includes('multimedia')) {
+                    if (item.data.url?.includes('multimedia') && session.type === 'group') {
                       item.data.url = item.data.url.replace('multimedia.nt.qq.com.cn', 'c2cpicdw.qpic.cn')
                       item.data.url = item.data.url.replace('&spec=0', '')
                       item.data.url += '&spec=0'

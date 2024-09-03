@@ -1,19 +1,15 @@
-import { useEventBus } from '@shined/react-use'
 import { toast, Toaster } from 'react-hot-toast'
 import { RouterProvider } from 'react-router-dom'
 import { useAutoDarkMode } from './hooks/use-dark-mode'
-import { useOneBotApi } from './hooks/use-onebot-api'
+import { onebotBus, useOneBotApi } from './hooks/use-onebot-api'
 import { useWebsocket } from './hooks/use-websocket'
 import { router } from './router'
 import { globalStore, useWsUrl } from './store'
-
-export const busSymbol = Symbol('api_ret')
 
 export function App() {
   useAutoDarkMode()
 
   const api = useOneBotApi()
-  const bus = useEventBus(busSymbol)
 
   const wsRef = useWebsocket(useWsUrl(), {
     onClose() {
@@ -35,7 +31,7 @@ export function App() {
     onMessage(message) {
       const msg = JSON.parse(message.data)
       console.log('[ws message]', msg)
-      if (msg.echo) bus.emit(`action:${msg.echo}`, msg)
+      if (msg.echo) onebotBus.emit(`action:${msg.echo}`, msg)
     },
     onError(error) {
       console.error('[ws error]', error)

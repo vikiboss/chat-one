@@ -1,36 +1,22 @@
 import { wsApi } from '@/store'
 import { uuid } from '@/utils/uuid'
-import { busSymbol } from '@/app'
-import { useEventBus } from '@shined/react-use'
 
-const actions = new Set()
+export const onebotBus = createEventBus()
 
 export const useOneBotApi = () => {
-  const bus = useEventBus(busSymbol)
-
-  function deleteAction(actionId: string) {
-    actions.delete(actionId)
-    if (actions.size === 0) bus.cleanup()
-  }
-
   function genRetPromise<Data>(timeout = 12_000) {
     const actionId = uuid()
-    actions.add(actionId)
 
     return {
       retPromise: new Promise<Data>((resolve, reject) => {
         const timer = setTimeout(() => {
-          deleteAction(actionId)
           reject(new Error('OneBot WS API Timeout'))
         }, timeout)
 
-        const off = bus.on((event, data: Data) => {
-          if (event === `action:${actionId}`) {
-            deleteAction(actionId)
-            clearTimeout(timer)
-            off()
-            resolve(data)
-          }
+        const off = onebotBus.on(`action:${actionId}`, (data: Data) => {
+          clearTimeout(timer)
+          off()
+          resolve(data)
         })
       }),
       actionId,
@@ -40,12 +26,39 @@ export const useOneBotApi = () => {
   const api = {
     action: <Data>(action: string, params: Record<string, unknown> = {}) => {
       const { retPromise, actionId } = genRetPromise<Data>()
+
       wsApi.instance?.send(JSON.stringify({ action, params, echo: actionId }))
       return retPromise
     },
   }
 
   return api
+}
+
+function createEventBus() {
+  const listeners = new Map<string, Set<(payload: any) => void>>()
+
+  function on(eventName: string, listener: (payload: any) => void) {
+    const set = listeners.get(eventName) || new Set()
+    set.add(listener)
+    listeners.set(eventName, set)
+    return () => off(eventName, listener)
+  }
+
+  function off(eventName: string, listener: (payload: any) => void) {
+    const set = listeners.get(eventName)
+    if (!set) return
+    set.delete(listener)
+    if (set.size === 0) listeners.delete(eventName)
+  }
+
+  function emit(eventName: string, data: any) {
+    const set = listeners.get(eventName)
+    if (!set) return
+    for (const listener of set) listener(data)
+  }
+
+  return { on, emit }
 }
 
 export namespace OneBot {
