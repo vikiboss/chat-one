@@ -1,4 +1,6 @@
+import toast from 'react-hot-toast'
 import { cn } from '@/utils'
+import { useClipboard } from '@shined/react-use'
 
 import type { OneBot } from '@/hooks/use-onebot-api'
 import type { ImgHTMLAttributes } from 'react'
@@ -17,6 +19,8 @@ interface Props extends ImgHTMLAttributes<HTMLImageElement> {
 export function ChatAvatar(props: Props) {
   const { item, onClick, rounded = false, size = 'size-8', imgSize = 100, className, ...imgProps } = props
 
+  const clipboard = useClipboard()
+
   const url =
     item.type === 'group'
       ? `https://p.qlogo.cn/gh/${item.id}/${item.id}/${imgSize}`
@@ -24,7 +28,11 @@ export function ChatAvatar(props: Props) {
 
   return (
     <img
-      onClick={onClick}
+      onClick={(e) => {
+        clipboard.copy(item.id.toString())
+        toast.success('Id copied to clipboard!')
+        onClick?.(e)
+      }}
       className={cn(
         size,
         rounded ? 'rounded-full' : 'rounded',
