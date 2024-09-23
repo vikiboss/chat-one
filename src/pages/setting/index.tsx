@@ -6,7 +6,11 @@ import { homeStore } from '../store'
 export function Setting() {
   const clear = useAsyncFn(async () => {
     localforage.removeItem('homeStore')
-    homeStore.mutate.contactList = []
+
+    for (const contact of homeStore.mutate.contactList) {
+      contact.unreadCount = 0
+      contact.history = []
+    }
   })
 
   return (
