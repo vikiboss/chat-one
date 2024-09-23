@@ -5,8 +5,8 @@ import { homeStore } from '../store'
 
 export function Setting() {
   const clear = useAsyncFn(async () => {
-    homeStore.restore()
     localforage.removeItem('homeStore')
+    homeStore.mutate.contactList = []
   })
 
   return (
