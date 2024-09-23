@@ -24,7 +24,16 @@ export function ChatList() {
         const filteredHistory = item.history.filter((e) => blackList.some((id) => e.user_id !== id))
         const lastMessage = filteredHistory[filteredHistory.length - 1]
         const lastMsgName = lastMessage?.sender.nickname ?? 'Unknown'
-        const lastMsgText = lastMessage.raw_message || '[no message]'
+        const lastMsgText =
+          (lastMessage?.message.find((e) => e.type === 'image') ? '[图片]' : '') ||
+          (lastMessage?.message.find((e) => e.type === 'mface') ? '[图片表情]' : '') ||
+          (lastMessage?.message.find((e) => e.type === 'json') ? '[卡片消息]' : '') ||
+          (lastMessage?.message.find((e) => e.type === 'record') ? '[语音消息]' : '') ||
+          (lastMessage?.message.find((e) => e.type === 'video') ? '[视频消息]' : '') ||
+          (lastMessage?.message.find((e) => e.type === 'face') ? '[QQ 表情]' : '') ||
+          (lastMessage?.message.find((e) => e.type === 'forward') ? '[合并转发]' : '') ||
+          lastMessage?.message.find((e) => e.type === 'text')?.data.text ||
+          '[No Message]'
 
         function LastMsgTime() {
           if (!lastMessage) return null
