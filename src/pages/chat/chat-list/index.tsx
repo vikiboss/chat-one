@@ -24,21 +24,29 @@ export function ChatList() {
         const filteredHistory = item.history.filter((e) => blackList.some((id) => e.user_id !== id))
         const lastMessage = filteredHistory[filteredHistory.length - 1]
         const lastMsgName = lastMessage?.sender.nickname ?? 'Unknown'
-
-        const lastMsgText =
-          (lastMessage?.message.find((e) => e.type === 'image') ? '[图片]' : '') ||
-          (lastMessage?.message.find((e) => e.type === 'mface') ? '[图片表情]' : '') ||
-          (lastMessage?.message.find((e) => e.type === 'json') ? '[卡片消息]' : '') ||
-          (lastMessage?.message.find((e) => e.type === 'record') ? '[语音消息]' : '') ||
-          (lastMessage?.message.find((e) => e.type === 'video') ? '[视频消息]' : '') ||
-          (lastMessage?.message.find((e) => e.type === 'face') ? '[QQ 表情]' : '') ||
-          (lastMessage?.message.find((e) => e.type === 'forward') ? '[合并转发]' : '') ||
-          lastMessage?.message.find((e) => e.type === 'text')?.data.text ||
-          '[No Message]'
+        const lastMsgText = lastMessage.raw_message || '[no message]'
 
         function LastMsgTime() {
           if (!lastMessage) return null
-          return <div className="text-xs text-gray/60">{useTimeAgo(new Date(lastMessage.time * 1000))}</div>
+          return (
+            <div className="text-xs text-gray/60">
+              {useTimeAgo(new Date(lastMessage.time * 1000), {
+                messages: {
+                  justNow: '刚刚',
+                  past: (n) => (n.match(/\d/) ? `${n}前` : n),
+                  future: (n) => (n.match(/\d/) ? `${n}后` : n),
+                  month: (n, past) => (n === 1 ? (past ? '上个月' : '下个月') : `${n} 个月`),
+                  year: (n, past) => (n === 1 ? (past ? '去年' : '明年') : `${n} 年`),
+                  day: (n, past) => (n === 1 ? (past ? '昨天' : '明天') : `${n} 天`),
+                  week: (n, past) => (n === 1 ? (past ? '上周' : '下周') : `${n} 周`),
+                  hour: (n) => `${n} 小时`,
+                  minute: (n) => `${n} 分钟`,
+                  second: (n) => `${n} 秒`,
+                  invalid: '',
+                },
+              })}
+            </div>
+          )
         }
 
         return (
