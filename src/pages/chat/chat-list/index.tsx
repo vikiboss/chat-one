@@ -24,16 +24,8 @@ export function ChatList() {
         const filteredHistory = item.history.filter((e) => blackList.some((id) => e.user_id !== id))
         const lastMessage = filteredHistory[filteredHistory.length - 1]
         const lastMsgName = lastMessage?.sender.nickname ?? 'Unknown'
-        const lastMsgText =
-          (lastMessage?.message.find((e) => e.type === 'image') ? '[图片]' : '') ||
-          (lastMessage?.message.find((e) => e.type === 'mface') ? '[图片表情]' : '') ||
-          (lastMessage?.message.find((e) => e.type === 'json') ? '[卡片消息]' : '') ||
-          (lastMessage?.message.find((e) => e.type === 'record') ? '[语音消息]' : '') ||
-          (lastMessage?.message.find((e) => e.type === 'video') ? '[视频消息]' : '') ||
-          (lastMessage?.message.find((e) => e.type === 'face') ? '[QQ 表情]' : '') ||
-          (lastMessage?.message.find((e) => e.type === 'forward') ? '[合并转发]' : '') ||
-          lastMessage?.message.find((e) => e.type === 'text')?.data.text ||
-          '[No Message]'
+
+        const lastMsgText = convertMessageToText(lastMessage)
 
         function LastMsgTime() {
           if (!lastMessage) return null
@@ -110,4 +102,39 @@ export function ChatList() {
       )}
     </div>
   )
+}
+
+const convertMessageToText = (lastMessage: any) => {
+  if (!lastMessage?.message) {
+    return '[No Message]'
+  }
+
+  const messageTypesToText = {
+    at: '[@消息]',
+    image: '[图片]',
+    mface: '[图片表情]',
+    json: '[卡片消息]',
+    record: '[语音消息]',
+    video: '[视频消息]',
+    face: '[QQ 表情]',
+    forward: '[合并转发]',
+  }
+
+  const textParts = lastMessage.message
+    .map((msgPart) => {
+      // Check each known type and return its text representation if found
+      if (messageTypesToText[msgPart.type]) {
+        return messageTypesToText[msgPart.type]
+      }
+      // If a text message, return its content directly
+      if (msgPart.type === 'text' && msgPart.data?.text) {
+        return msgPart.data.text
+      }
+      // For any unrecognized type, return nothing
+      return ''
+    })
+    .filter((text) => text.length > 0) // Remove any empty strings
+
+  // Join all parts of the message. If no recognizable parts were found, default to '[No Message]'
+  return textParts.length > 0 ? textParts.join(' ') : '[No Message]'
 }
