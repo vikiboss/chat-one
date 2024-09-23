@@ -1,6 +1,6 @@
 import { ChatAvatar } from '@/components/chat-avatar'
 import { globalStore, useConnected, useOnline, useUserInfo } from '@/store'
-import { useEffectOnce, useMount, useThrottledFn } from '@shined/react-use'
+import { useBeforeUnload, useMount } from '@shined/react-use'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useTab } from './hooks/use-tab'
 import { useWsListener } from './hooks/use-ws-listener'
@@ -23,14 +23,12 @@ export function Home() {
     }
   })
 
-  const throttledSaveCache = useThrottledFn(
-    (snapshot: any) => {
-      localforage.setItem('homeStore', JSON.stringify(snapshot))
+  useBeforeUnload(
+    () => {
+      localforage.setItem('homeStore', JSON.stringify(homeStore.snapshot()))
     },
-    { wait: 3_000 },
+    { preventDefault: true },
   )
-
-  useEffectOnce(() => homeStore.subscribe((changes) => throttledSaveCache(changes.snapshot)))
 
   if (!isConnected && hasHost) {
     return (
