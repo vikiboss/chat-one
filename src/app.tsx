@@ -67,7 +67,6 @@ export function App() {
 
               if (atItem.type === 'at') {
                 msg.message.splice(idx + 1, 1)
-                msg.message[idx].data.__user_id__ = atItem.data.qq
               }
             }
 

@@ -107,7 +107,7 @@ export function MsgRenderer(props: MsgRendererProps) {
             return (
               <div className="inline-flex items-center" key={`${e.type}-${idx}`}>
                 <span>[回复</span>
-                <MsgRenderer messages={[{ type: 'at', data: { qq: e.data.__user_id__ } }]} />
+                <MsgRenderer messages={[{ type: 'at', data: { qq: e.data.user_id || e.data.qq } }]} />
                 <span>]</span>
               </div>
             )
