@@ -41,16 +41,6 @@ export function App() {
       toast.error('WS connection error')
     },
     reconnect: false,
-    // reconnect: {
-    //   count: 3,
-    //   interval: 3000,
-    //   onReconnect: () => {
-    //     toast.loading('WS reconnecting...')
-    //   },
-    //   onReconnectFailed: () => {
-    //     toast.error('WS reconnect failed')
-    //   },
-    // },
   })
 
   return (

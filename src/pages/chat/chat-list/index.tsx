@@ -103,7 +103,7 @@ export function ChatList() {
   )
 }
 
-const convertMessageToText = (lastMessage: any) => {
+export const convertMessageToText = (lastMessage: any) => {
   const alt = lastMessage?.raw_message || lastMessage?.alt_message
 
   if (alt) return alt

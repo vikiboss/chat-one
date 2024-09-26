@@ -52,7 +52,7 @@ export function MsgInput() {
         onPaste={(e) => {
           if (e.clipboardData?.items.length) {
             for (const item of e.clipboardData.items) {
-              if (item.type.startsWith('image')) {
+              if (item.type?.startsWith('image')) {
                 const file = item.getAsFile()
                 if (!file) continue
                 const reader = new FileReader()

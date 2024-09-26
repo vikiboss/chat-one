@@ -119,7 +119,7 @@ export function MsgRenderer(props: MsgRendererProps) {
             return `[语音消息] ${e.data.url}`
 
           case 'video': {
-            const url = e.data.url.startsWith('base64://')
+            const url = e.data.url?.startsWith('base64://')
               ? e.data.url.replace('base64://', 'data:video/mp4;base64,')
               : e.data.url
 
