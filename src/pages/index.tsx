@@ -3,13 +3,10 @@ import { globalStore, useConnected, useOnline, useUserInfo } from '@/store'
 import { useBeforeUnload, useMount } from '@shined/react-use'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useTab } from './hooks/use-tab'
-import { useWsListener } from './hooks/use-ws-listener'
 import { homeStore } from './store'
 import localforage from 'localforage'
 
 export function Home() {
-  useWsListener()
-
   const tab = useTab()
   const info = useUserInfo()
   const navigate = useNavigate()

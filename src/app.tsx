@@ -5,6 +5,9 @@ import { RouterProvider } from 'react-router-dom'
 import { useAutoDarkMode } from './hooks/use-dark-mode'
 import { globalStore, useWsUrl } from './store'
 import { onebotBus, useOneBotApi } from './hooks/use-onebot-api'
+import { blackList } from './utils/blacklist'
+import { homeStore } from './pages/store'
+import { chatListStore } from './pages/chat/store'
 
 export function App() {
   useAutoDarkMode()
@@ -35,6 +38,62 @@ export function App() {
       const msg = JSON.parse(message.data)
       console.log('[ws message]', msg)
       if (msg.echo) onebotBus.emit(`action:${msg.echo}`, msg)
+
+      const isInBlacklist = blackList.some((id) => msg.user_id === id)
+
+      switch (msg.post_type) {
+        case 'message': {
+          const target = homeStore.mutate.contactList.find((c) => {
+            const isGroup = msg.message_type === 'group'
+            return isGroup ? c.id === msg.group_id : c.id === msg.user_id
+          })
+
+          const { id, type } = chatListStore.mutate.session || {}
+
+          if (target) {
+            if (id === target.id && type === target.type) {
+              target.unreadCount = 0
+              target.chatting = true
+            } else {
+              !isInBlacklist && target.unreadCount++
+              homeStore.mutate.contactList.splice(homeStore.mutate.contactList.indexOf(target), 1)
+              homeStore.mutate.contactList.unshift(target)
+            }
+
+            const idx = msg.message.findIndex((e: any) => e.type === 'reply')
+
+            if (idx !== -1 && msg.message.length > idx + 1) {
+              const atItem = msg.message[idx + 1]
+
+              if (atItem.type === 'at') {
+                msg.message.splice(idx + 1, 1)
+                msg.message[idx].data.__user_id__ = atItem.data.qq
+              }
+            }
+
+            target.history.push(msg)
+          }
+
+          break
+        }
+        case 'notice':
+          break
+        case 'request':
+          break
+        case 'meta_event': {
+          switch (msg.meta_event_type) {
+            case 'heartbeat': {
+              globalStore.mutate.isOnline = msg.status.online
+              break
+            }
+            default:
+              break
+          }
+          break
+        }
+        default:
+          break
+      }
     },
     onError(error) {
       console.error('[ws error]', error)
