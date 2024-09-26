@@ -96,6 +96,7 @@ export function ChatHistory() {
 
         return (
           <div
+            id={msg.message_id}
             key={msg.message_id}
             title={new Date(msg.time * 1000).toLocaleString('zh-CN')}
             className={cn('flex w-full gap-2 p-2 group', !lastMessageIsSameUser ? 'py-2' : 'pt-0')}

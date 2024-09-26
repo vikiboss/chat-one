@@ -35,7 +35,7 @@ export function Home() {
   return (
     <div className="relative">
       <div className="size-screen grid-center">
-        <div className="z-10 rounded p-2 h-[calc(100vh-6rem)] w-[calc((100vh-6rem)/0.618)] bg-stone/12 flex flex-col gap-2">
+        <div className="z-10 rounded p-2 h-[calc(100vh-6rem)] min-h-[calc(480px)] w-[calc(100vw-12rem)] min-w-[calc(800px)] bg-stone/12 flex flex-col gap-2">
           <div className="h-5">
             {info ? (
               <div className="flex gap-1 items-center">
