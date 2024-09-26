@@ -37,7 +37,7 @@ export const useContactList = () => {
         const friend = homeStore.mutate.contactList.find((c) => c.type === 'private' && c.id === e.user_id)
         return {
           id: e.user_id,
-          name: e.nickname,
+          name: e?.nickname,
           type: 'private' as const,
           info: e,
           history: (friend?.history ?? []).slice(-600) as OneBot.PrivateMessage[],

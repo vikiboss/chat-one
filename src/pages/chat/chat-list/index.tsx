@@ -23,8 +23,7 @@ export function ChatList() {
         const isActive = isTargetChat(item, session)
         const filteredHistory = item.history.filter((e) => blackList.some((id) => e.user_id !== id))
         const lastMessage = filteredHistory[filteredHistory.length - 1]
-        const lastMsgName = lastMessage?.sender.nickname ?? 'Unknown'
-
+        const lastMsgName = lastMessage?.sender?.nickname ?? 'Unknown'
         const lastMsgText = convertMessageToText(lastMessage)
 
         function LastMsgTime() {
@@ -53,7 +52,7 @@ export function ChatList() {
         return (
           <div
             key={item.id + item.type}
-            title={item.type === 'group' ? `Group: ${item.name}` : `Private: ${item.name} (${item.info.nickname})`}
+            title={item.type === 'group' ? `Group: ${item.name}` : `Private: ${item.name} (${item.info?.nickname})`}
             className="border-0 border-solid border-b-1px border-b-zinc/12 last:border-b-transparent"
           >
             <div
@@ -105,9 +104,11 @@ export function ChatList() {
 }
 
 const convertMessageToText = (lastMessage: any) => {
-  if (!lastMessage?.message) {
-    return '[No Message]'
-  }
+  const alt = lastMessage?.raw_message || lastMessage?.alt_message
+
+  if (alt) return alt
+
+  if (!lastMessage?.message) return '[No Message]'
 
   const messageTypesToText = {
     at: '[@消息]',

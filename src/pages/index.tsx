@@ -23,12 +23,9 @@ export function Home() {
     }
   })
 
-  useBeforeUnload(
-    () => {
-      localforage.setItem('homeStore', JSON.stringify(homeStore.snapshot()))
-    },
-    { preventDefault: true },
-  )
+  useBeforeUnload(() => {
+    localforage.setItem('homeStore', JSON.stringify(homeStore.snapshot()))
+  })
 
   if (!isConnected && hasHost) {
     return (

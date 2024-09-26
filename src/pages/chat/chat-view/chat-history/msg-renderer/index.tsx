@@ -52,10 +52,31 @@ export function MsgRenderer(props: MsgRendererProps) {
             return (
               <div
                 key={`${e.type}-${idx}`}
-                className="inline-flex flex-center gap-1 mx-1 bg-blue/20 text-blue-5 px-1 py-0.25 rounded"
+                className="inline-flex flex-center gap-1 mx-1 bg-blue/16 text-blue-5 px-1 py-0.25 rounded"
               >
                 <span>@</span>
                 <ChatAvatar size="size-4" item={{ type: 'private', id: e.data.qq }} />
+              </div>
+            )
+
+          case 'mention':
+            return (
+              <div
+                key={`${e.type}-${idx}`}
+                className="inline-flex flex-center gap-1 mx-1 bg-blue/16 text-blue-5 px-1 py-0.25 rounded"
+              >
+                <span>@</span>
+                <ChatAvatar size="size-4" item={{ type: 'private', id: e.data.qq }} />
+              </div>
+            )
+
+          case 'mention_all':
+            return (
+              <div
+                key={`${e.type}-${idx}`}
+                className="inline-flex flex-center gap-1 mx-1 bg-blue/16 text-blue-5 px-1 py-0.25 rounded"
+              >
+                <span>@全体成员</span>
               </div>
             )
 

@@ -88,7 +88,7 @@ export function ChatHistory() {
         }
 
         const card = 'card' in msg.sender ? msg.sender.card : ''
-        const name = card ? `${card} (${msg.sender.nickname})` : msg.sender.nickname
+        const name = card ? `${card} (${msg.sender?.nickname})` : msg.sender?.nickname
 
         const isNoBorder =
           msg.message.some((e) => e.type === 'mface') ||
