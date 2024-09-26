@@ -11,7 +11,7 @@ export function App() {
 
   const api = useOneBotApi()
 
-  const { ws } = useWebSocket(useWsUrl(), {
+  const ws = useWebSocket(useWsUrl(), {
     filter: (e) => {
       const data = JSON.parse(e.data)
       return data.meta_event_type === 'heartbeat'
@@ -24,7 +24,7 @@ export function App() {
     async onOpen() {
       console.log('[ws opened]')
       globalStore.mutate.isConnected = true
-      const instance = ws()
+      const instance = ws.ws
       if (instance) {
         globalStore.mutate.ws.ref.instance = instance
         const iRes = await api.action<{ data: any }>('get_login_info')
@@ -40,7 +40,6 @@ export function App() {
       console.error('[ws error]', error)
       toast.error('WS connection error')
     },
-    reconnect: false,
   })
 
   return (
