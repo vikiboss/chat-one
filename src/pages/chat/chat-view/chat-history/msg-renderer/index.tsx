@@ -131,7 +131,7 @@ export function MsgRenderer(props: MsgRendererProps) {
                 target.hasImage ? (
                   <img
                     key={`${e.type}-${idx}`}
-                    className="h-5"
+                    className="h-5 inline-block align-middle"
                     title={JSON.stringify(e.data, null, 2)}
                     src={`https://static-face-host.viki.moe/face/gif/s${e.data.id}.${target.format ?? 'gif'}`}
                     alt="face"
