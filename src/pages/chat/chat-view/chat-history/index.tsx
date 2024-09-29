@@ -92,7 +92,7 @@ export function ChatHistory() {
 
         const isNoBorder =
           msg.message.some((e) => e.type === 'mface') ||
-          (msg.message.length === 1 && ['image', 'video', 'record'].some((e) => e === msg.message[0].type))
+          (msg.message.length === 1 && ['bface', 'image', 'video', 'record'].some((e) => e === msg.message[0].type))
 
         return (
           <div
