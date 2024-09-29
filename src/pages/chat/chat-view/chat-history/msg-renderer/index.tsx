@@ -204,9 +204,24 @@ export function MsgRenderer(props: MsgRendererProps) {
                 />
               ) : (
                 <span title={JSON.stringify(e.data, null, 2)} key={`${e.type}-${idx}`}>
-                  [原创表情, id={e.data.id || ''}]
+                  [魔法表情, id={e.data.id || ''}]
                 </span>
               )
+
+            case 'bface': {
+              const id = e.data.file.slice(0, 2)
+              const hash = e.data.file.slice(0, 32)
+              const url = `https://gxh.vip.qq.com/club/item/parcel/item/${id}/${hash}/raw300.gif`
+              return (
+                <img
+                  key={`${e.type}-${idx}`}
+                  className="inline-block h-24 rounded"
+                  src={url}
+                  alt="m-face-image"
+                  title={JSON.stringify(e.data, null, 2)}
+                />
+              )
+            }
 
             case 'file':
               return (
